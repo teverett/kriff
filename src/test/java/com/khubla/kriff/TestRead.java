@@ -5,16 +5,21 @@
  */
 package com.khubla.kriff;
 
+import com.khubla.kriff.domain.RIFFFile;
 import org.junit.jupiter.api.Test;
+
+import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestRead {
    @Test
    public void test1() {
-      try{
-
-      }catch (final Exception e) {
+      try {
+         InputStream is = TestRead.class.getResourceAsStream("/PinkPanther30.wav");
+         RIFFFileReader riffFileReader = new RIFFFileReader();
+         RIFFFile riffFile = riffFileReader.read(is);
+      } catch (final Exception e) {
          e.printStackTrace();
          fail();
       }

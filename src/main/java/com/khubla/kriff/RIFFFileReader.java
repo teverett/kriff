@@ -1,39 +1,37 @@
 package com.khubla.kriff;
 
+import com.khubla.kriff.domain.RIFFFile;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import com.khubla.kriff.domain.RIFFFile;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-
-import javax.sound.midi.spi.MidiFileReader;
-
 public class RIFFFileReader {
    /**
     * logger
     */
-   private static final Logger logger = LogManager.getLogger(MidiFileReader.class);
+   private static final Logger logger = LogManager.getLogger(RIFFFileReader.class);
 
-   public void read(String fn, RIFFFile riffFile) {
-      InputStream fis = null;
+   public RIFFFile read(InputStream inputStream) throws Exception {
+      RIFFFile ret = new RIFFFile();
       BufferedInputStream bis = null;
       DataInputStream dis = null;
       try {
-         fis = new FileInputStream(fn);
-         if (null != fis) {
+         if (null != inputStream) {
             /*
              * need BufferedInputStream for mark/reset
              */
-            bis = new BufferedInputStream(fis);
+            bis = new BufferedInputStream(inputStream);
             dis = new DataInputStream(bis);
-            riffFile.read(dis);
+            ret.read(dis);
          }
+         return ret;
       } catch (final Exception e) {
          logger.error("Exception in read", e);
+         throw new Exception("Exception in read", e);
       } finally {
          try {
             if (null != dis) {
@@ -42,6 +40,26 @@ public class RIFFFileReader {
             if (null != bis) {
                bis.close();
             }
+         } catch (final Exception e) {
+            logger.error("Exception in read", e);
+         }
+      }
+   }
+
+   public RIFFFile read(String fn) throws Exception {
+      InputStream fis = null;
+      try {
+         fis = new FileInputStream(fn);
+         if (null != fis) {
+            return this.read(fis);
+         } else {
+            return null;
+         }
+      } catch (final Exception e) {
+         logger.error("Exception in read", e);
+         throw new Exception("Exception in read", e);
+      } finally {
+         try {
             if (null != fis) {
                fis.close();
             }
