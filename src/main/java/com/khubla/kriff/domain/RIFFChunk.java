@@ -8,37 +8,9 @@ package com.khubla.kriff.domain;
 import com.khubla.kriff.api.Readable;
 
 import java.io.DataInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-public class RIFFFile implements Readable {
-   /**
-    * expected id bytes
-    */
-   private final static byte[] ID = { 'R', 'I', 'F', 'F' };
-   /**
-    * chunks
-    */
-   private final List<RIFFChunk> chunks = new ArrayList<RIFFChunk>();
-   /**
-    * id bytes
-    */
-   private final byte[] id = new byte[4];
-
-   public List<RIFFChunk> getChunks() {
-      return chunks;
-   }
-
+public class RIFFChunk implements Readable {
    @Override
    public void read(DataInputStream dis) throws Exception {
-      /*
-       * RIFF header
-       */
-      dis.read(id);
-      for (int i = 0; i < ID.length; i++) {
-         if (id[i] != ID[i]) {
-            throw new Exception("Head bytes mismatch");
-         }
-      }
    }
 }
