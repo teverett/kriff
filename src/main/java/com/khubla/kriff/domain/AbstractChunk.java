@@ -8,26 +8,15 @@ package com.khubla.kriff.domain;
 import com.khubla.kriff.api.Readable;
 
 import java.io.DataInputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
-public class RIFFFile implements Readable {
+public abstract class AbstractChunk implements Chunk, Readable {
    /**
-    * chunks
+    * id bytes
     */
-   private final List<RIFFChunk> chunks = new ArrayList<RIFFChunk>();
+   protected final byte[] id = new byte[4];
 
-   public List<RIFFChunk> getChunks() {
-      return chunks;
-   }
-
-   @Override
-   public void read(DataInputStream dis) throws Exception {
-      try {
-         RIFFChunk riffChunk = new RIFFChunk();
-         riffChunk.read(dis);
-      } catch (Exception e) {
-         throw new Exception("Exception in read", e);
-      }
+   protected void readID(DataInputStream dis) throws IOException {
+      dis.read(id);
    }
 }

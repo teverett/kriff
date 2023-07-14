@@ -5,12 +5,21 @@
  */
 package com.khubla.kriff.domain;
 
-import com.khubla.kriff.api.Readable;
-
 import java.io.DataInputStream;
 
-public class RIFFChunk implements Readable {
+public class RIFFChunk extends AbstractChunk {
+   /**
+    * expected id bytes
+    */
+   private final static byte[] ID = { 'R', 'I', 'F', 'F' };
+
    @Override
    public void read(DataInputStream dis) throws Exception {
+      this.readID(dis);
+      for (int i = 0; i < ID.length; i++) {
+         if (id[i] != ID[i]) {
+            throw new Exception("Head bytes mismatch");
+         }
+      }
    }
 }

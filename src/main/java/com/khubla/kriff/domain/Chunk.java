@@ -5,29 +5,5 @@
  */
 package com.khubla.kriff.domain;
 
-import com.khubla.kriff.api.Readable;
-
-import java.io.DataInputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-public class RIFFFile implements Readable {
-   /**
-    * chunks
-    */
-   private final List<RIFFChunk> chunks = new ArrayList<RIFFChunk>();
-
-   public List<RIFFChunk> getChunks() {
-      return chunks;
-   }
-
-   @Override
-   public void read(DataInputStream dis) throws Exception {
-      try {
-         RIFFChunk riffChunk = new RIFFChunk();
-         riffChunk.read(dis);
-      } catch (Exception e) {
-         throw new Exception("Exception in read", e);
-      }
-   }
+public interface Chunk {
 }
