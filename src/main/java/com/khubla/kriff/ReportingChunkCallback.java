@@ -3,26 +3,13 @@
  * provided with the distribution. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.khubla.kriff.domain;
+package com.khubla.kriff;
 
-public class ChunkFactory {
-   private static ChunkFactory instance = null;
+import com.khubla.kriff.api.ChunkCallback;
 
-   private ChunkFactory() {
-   }
-
-   public static ChunkFactory getInstance() {
-      if (null == instance) {
-         instance = new ChunkFactory();
-      }
-      return instance;
-   }
-
-   public Chunk getChunk(String type) {
-      if (type.equals("WAVE")) {
-         return new WAVChunk();
-      }
-      return null;
+public class ReportingChunkCallback implements ChunkCallback {
+   @Override
+   public void chunk(String type, int length, int offset) {
+      System.out.println("Chunk '" + type + "' of length " + length + " at offset " + offset);
    }
 }
-

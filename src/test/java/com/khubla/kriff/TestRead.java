@@ -17,8 +17,9 @@ public class TestRead {
    public void test1() {
       try {
          InputStream is = TestRead.class.getResourceAsStream("/PinkPanther30.wav");
+         ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
          RIFFFileReader riffFileReader = new RIFFFileReader();
-         RIFFFile riffFile = riffFileReader.read(is);
+         RIFFFile riffFile = riffFileReader.read(is, reportingChunkCallback);
       } catch (final Exception e) {
          e.printStackTrace();
          fail();

@@ -5,7 +5,85 @@
  */
 package com.khubla.kriff.domain;
 
-import com.khubla.kriff.api.Readable;
+import com.google.common.io.LittleEndianDataInputStream;
+import com.khubla.kriff.api.ChunkCallback;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public interface Chunk extends Readable {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Chunk {
+   /**
+    * standard chunk header
+    */
+   private static final int STANDARD_CHUNK_HEADER_SIZE = 8;
+   /**
+    * logger
+    */
+   private static final Logger logger = LogManager.getLogger(Chunk.class);
+   /**
+    * id bytes
+    */
+   protected String id;
+   /**
+    * length
+    */
+   protected int length;
+   /**
+    * type (only for RIFF and LIST)
+    */
+   protected String type;
+   /**
+    * subchunks (RIFF and LIST)
+    */
+   private List<Chunk> chunks;
+
+   protected void readHeader(LittleEndianDataInputStream dis) throws IOException {
+      /*
+       * id
+       */
+      byte[] idbytes = new byte[4];
+      dis.read(idbytes);
+      id = new String(idbytes);
+      /*
+       * length
+       */
+      this.length = dis.readInt();
+      /*
+       * is riff?
+       */
+      if (isRIFF()) {
+         this.chunks = new ArrayList<Chunk>();
+         byte[] typebytes = new byte[4];
+         dis.read(typebytes);
+         type = new String(typebytes);
+      } else {
+         this.type = null;
+      }
+   }
+
+   public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
+      // header
+      this.readHeader(dis);
+      chunkCallback.chunk(this.id, this.length,0);
+      if (isRIFF()) {
+         int readbytes = 0;
+         while (readbytes < this.length) {
+            // get chunk
+            Chunk chunk = new Chunk();
+            this.chunks.add(chunk);
+            chunk.read(dis, chunkCallback);
+            readbytes += chunk.length + STANDARD_CHUNK_HEADER_SIZE;
+         }
+      } else {
+         // skip content
+         dis.skipBytes(this.length);
+      }
+   }
+
+   private boolean isRIFF() {
+      return (this.id.compareTo("RIFF") == 0);
+   }
 }

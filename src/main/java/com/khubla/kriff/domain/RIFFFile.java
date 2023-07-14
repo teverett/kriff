@@ -6,14 +6,14 @@
 package com.khubla.kriff.domain;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.api.Readable;
+import com.khubla.kriff.ReportingChunkCallback;
+import com.khubla.kriff.api.ChunkCallback;
 
-public class RIFFFile implements Readable {
-   @Override
-   public void read(LittleEndianDataInputStream dis) throws Exception {
+public class RIFFFile {
+   public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
       try {
-         RIFFChunk riffChunk = new RIFFChunk();
-         riffChunk.read(dis);
+         Chunk chunk = new Chunk();
+         chunk.read(dis, chunkCallback);
       } catch (Exception e) {
          throw new Exception("Exception in read", e);
       }
