@@ -6,16 +6,20 @@
 package com.khubla.kriff.domain;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.api.Readable;
 
-public class RIFFFile implements Readable {
+public class WAVChunk extends AbstractChunk {
+   /**
+    * expected id bytes
+    */
+   private final static byte[] ID = { 'W', 'A', 'V', 'E' };
+
    @Override
    public void read(LittleEndianDataInputStream dis) throws Exception {
-      try {
-         RIFFChunk riffChunk = new RIFFChunk();
-         riffChunk.read(dis);
-      } catch (Exception e) {
-         throw new Exception("Exception in read", e);
+      this.readHeader(dis);
+      for (int i = 0; i < ID.length; i++) {
+         if (id[i] != ID[i]) {
+            throw new Exception("Head bytes mismatch");
+         }
       }
    }
 }

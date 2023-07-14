@@ -5,5 +5,7 @@
  */
 package com.khubla.kriff.domain;
 
-public interface Chunk {
+import com.khubla.kriff.api.Readable;
+
+public interface Chunk extends Readable {
 }

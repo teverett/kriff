@@ -5,21 +5,43 @@
  */
 package com.khubla.kriff.domain;
 
-import java.io.DataInputStream;
+import com.google.common.io.LittleEndianDataInputStream;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RIFFChunk extends AbstractChunk {
    /**
     * expected id bytes
     */
    private final static byte[] ID = { 'R', 'I', 'F', 'F' };
+   /*
+    * fcc type
+    */
+   protected final byte[] formType = new byte[4];
+   /**
+    * chunks
+    */
+   private final List<Chunk> chunks = new ArrayList<Chunk>();
+
+   public List<Chunk> getChunks() {
+      return chunks;
+   }
 
    @Override
-   public void read(DataInputStream dis) throws Exception {
-      this.readID(dis);
+   public void read(LittleEndianDataInputStream dis) throws Exception {
+      // header
+      this.readHeader(dis);
+      // check id bytes
       for (int i = 0; i < ID.length; i++) {
          if (id[i] != ID[i]) {
             throw new Exception("Head bytes mismatch");
          }
       }
+      //  fcc type
+      dis.read(formType);
+      // get chunk
+      Chunk chunk = ChunkFactory.getInstance().getChunk(new String(formType));
+      chunk.read(dis);
    }
 }

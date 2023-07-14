@@ -5,18 +5,34 @@
  */
 package com.khubla.kriff.domain;
 
-import com.khubla.kriff.api.Readable;
+import com.google.common.io.LittleEndianDataInputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 
-public abstract class AbstractChunk implements Chunk, Readable {
+public abstract class AbstractChunk implements Chunk {
+   /**
+    * logger
+    */
+   private static final Logger logger = LogManager.getLogger(AbstractChunk.class);
    /**
     * id bytes
     */
    protected final byte[] id = new byte[4];
+   /**
+    * length
+    */
+   protected int length;
 
-   protected void readID(DataInputStream dis) throws IOException {
+   protected void readHeader(LittleEndianDataInputStream dis) throws IOException {
+      /*
+       * id
+       */
       dis.read(id);
+      /*
+       * length
+       */
+      this.length = dis.readInt();
    }
 }

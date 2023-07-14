@@ -5,11 +5,11 @@
  */
 package com.khubla.kriff.api;
 
-import java.io.DataInputStream;
+import com.google.common.io.LittleEndianDataInputStream;
 
 /**
  * @author tom
  */
 public interface Readable {
-   void read(DataInputStream dis) throws Exception;
+   void read(LittleEndianDataInputStream dis) throws Exception;
 }

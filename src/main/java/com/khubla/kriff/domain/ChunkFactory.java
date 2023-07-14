@@ -5,17 +5,24 @@
  */
 package com.khubla.kriff.domain;
 
-import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.api.Readable;
+public class ChunkFactory {
+   private static ChunkFactory instance = null;
 
-public class RIFFFile implements Readable {
-   @Override
-   public void read(LittleEndianDataInputStream dis) throws Exception {
-      try {
-         RIFFChunk riffChunk = new RIFFChunk();
-         riffChunk.read(dis);
-      } catch (Exception e) {
-         throw new Exception("Exception in read", e);
+   private ChunkFactory() {
+   }
+
+   public static ChunkFactory getInstance() {
+      if (null == instance) {
+         instance = new ChunkFactory();
       }
+      return instance;
+   }
+
+   public Chunk getChunk(String type) {
+      if (type.equals("WAVE")) {
+         return new WAVChunk();
+      }
+      return null;
    }
 }
+
