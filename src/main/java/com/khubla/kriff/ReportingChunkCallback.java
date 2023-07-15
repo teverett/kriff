@@ -5,8 +5,8 @@
  */
 package com.khubla.kriff;
 
+import com.khubla.kriff.api.Chunk;
 import com.khubla.kriff.api.ChunkCallback;
-import com.khubla.kriff.domain.Chunk;
 
 public class ReportingChunkCallback implements ChunkCallback {
    @Override

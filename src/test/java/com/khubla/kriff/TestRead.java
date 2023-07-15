@@ -5,8 +5,8 @@
  */
 package com.khubla.kriff;
 
+import com.khubla.kriff.api.Chunk;
 import com.khubla.kriff.api.ChunkHeader;
-import com.khubla.kriff.domain.Chunk;
 import com.khubla.kriff.domain.RIFFChunkHeader;
 import com.khubla.kriff.domain.RIFFFile;
 import org.junit.jupiter.api.Test;
@@ -38,16 +38,16 @@ public class TestRead {
          assertNotNull(rootChunk.getChunks());
          assertEquals(2, rootChunk.getChunks().size());
          // 1
-         Chunk chunk1 = rootChunk.getChunks().get(0);
-         ChunkHeader chunkHeader1 = chunk1.getChunkHeader();
+         Chunk Chunk1 = rootChunk.getChunks().get(0);
+         ChunkHeader chunkHeader1 = Chunk1.getChunkHeader();
          assertNotNull(chunkHeader1);
          assertEquals(0, chunkHeader1.getId().compareTo("fmt"));
          assertEquals(16, chunkHeader1.getLength());
          assertEquals(12, chunkHeader1.getHeaderOffset());
          assertEquals(20, chunkHeader1.getDataOffset());
          // 2
-         Chunk chunk2 = rootChunk.getChunks().get(1);
-         ChunkHeader chunkHeader2 = chunk2.getChunkHeader();
+         Chunk Chunk2 = rootChunk.getChunks().get(1);
+         ChunkHeader chunkHeader2 = Chunk2.getChunkHeader();
          assertNotNull(chunkHeader2);
          assertEquals(0, chunkHeader2.getId().compareTo("data"));
          assertEquals(1323000, chunkHeader2.getLength());

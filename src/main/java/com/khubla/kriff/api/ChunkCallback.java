@@ -5,8 +5,6 @@
  */
 package com.khubla.kriff.api;
 
-import com.khubla.kriff.domain.Chunk;
-
 public interface ChunkCallback {
    /**
     * callback for each chunk

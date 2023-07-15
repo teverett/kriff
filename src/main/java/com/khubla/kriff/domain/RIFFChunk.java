@@ -6,6 +6,7 @@
 package com.khubla.kriff.domain;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.khubla.kriff.api.Chunk;
 import com.khubla.kriff.api.ChunkCallback;
 import com.khubla.kriff.api.ChunkHeader;
 import org.apache.logging.log4j.LogManager;
@@ -15,11 +16,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Chunk {
+public class RIFFChunk implements Chunk {
    /**
     * logger
     */
-   private static final Logger logger = LogManager.getLogger(Chunk.class);
+   private static final Logger logger = LogManager.getLogger(RIFFChunk.class);
    /**
     * subchunks (RIFF and LIST)
     */
@@ -33,11 +34,11 @@ public class Chunk {
     */
    private ChunkHeader chunkHeader;
 
-   public Chunk() {
+   public RIFFChunk() {
       this.count = 0;
    }
 
-   public Chunk(int count) {
+   public RIFFChunk(int count) {
       this.count = count;
    }
 
@@ -70,7 +71,7 @@ public class Chunk {
    }
 
    public List<Chunk> getChunks() {
-      return chunks;
+      return this.chunks;
    }
 
    public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
@@ -80,10 +81,10 @@ public class Chunk {
       if (isRIFF(this.chunkHeader.getId())) {
          while (count < this.chunkHeader.getLength()) {
             // get chunk
-            Chunk chunk = new Chunk(this.count);
-            chunk.read(dis, chunkCallback);
-            this.chunks.add(chunk);
-            this.count = chunk.count;
+            RIFFChunk RIFFChunk = new RIFFChunk(this.count);
+            RIFFChunk.read(dis, chunkCallback);
+            this.chunks.add(RIFFChunk);
+            this.count = RIFFChunk.count;
          }
       } else {
          // skip content
