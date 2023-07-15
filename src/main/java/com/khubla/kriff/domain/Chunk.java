@@ -7,6 +7,7 @@ package com.khubla.kriff.domain;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.khubla.kriff.api.ChunkCallback;
+import com.khubla.kriff.api.ChunkHeader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,25 +17,9 @@ import java.util.List;
 
 public class Chunk {
    /**
-    * standard chunk header
-    */
-   private static final int STANDARD_CHUNK_HEADER_SIZE = 8;
-   /**
     * logger
     */
    private static final Logger logger = LogManager.getLogger(Chunk.class);
-   /**
-    * id bytes
-    */
-   protected String id;
-   /**
-    * length
-    */
-   protected int length;
-   /**
-    * type (only for RIFF and LIST)
-    */
-   protected String type;
    /**
     * subchunks (RIFF and LIST)
     */
@@ -43,6 +28,10 @@ public class Chunk {
     * running byte count
     */
    private int count;
+   /**
+    * header
+    */
+   private ChunkHeader chunkHeader;
 
    public Chunk() {
       this.count = 0;
@@ -56,49 +45,60 @@ public class Chunk {
       /*
        * id
        */
-      byte[] idbytes = new byte[4];
-      dis.read(idbytes);
-      id = new String(idbytes);
-      count += 4;
+      String id = readString(dis, 4);
+
       /*
        * length
        */
-      this.length = dis.readInt();
-      count += 4;
+      int length = dis.readInt();
       /*
        * is riff?
        */
-      if (isRIFF()) {
+      if (isRIFF(id)) {
          this.chunks = new ArrayList<Chunk>();
-         byte[] typebytes = new byte[4];
-         dis.read(typebytes);
-         count += 4;
-         type = new String(typebytes);
+         String type = readString(dis, 4);
+         this.chunkHeader = new RIFFChunkHeader(id, length, type, count, count + 12);
+         this.count += 12;
       } else {
-         this.type = null;
+         this.chunkHeader = new StandardChunkHeader(id, length, count, count + 8);
+         this.count += 8;
       }
+   }
+
+   public ChunkHeader getChunkHeader() {
+      return chunkHeader;
+   }
+
+   public List<Chunk> getChunks() {
+      return chunks;
    }
 
    public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
       // header
       this.readHeader(dis);
-      chunkCallback.chunk(this.id, this.length, this.count);
-      if (isRIFF()) {
-         while (count < this.length) {
+      chunkCallback.chunk(this);
+      if (isRIFF(this.chunkHeader.getId())) {
+         while (count < this.chunkHeader.getLength()) {
             // get chunk
             Chunk chunk = new Chunk(this.count);
-            this.chunks.add(chunk);
             chunk.read(dis, chunkCallback);
-            count += chunk.length + STANDARD_CHUNK_HEADER_SIZE;
+            this.chunks.add(chunk);
+            this.count = chunk.count;
          }
       } else {
          // skip content
-         dis.skipBytes(this.length);
-         count += this.length;
+         dis.skipBytes(this.chunkHeader.getLength());
+         count += this.chunkHeader.getLength();
       }
    }
 
-   private boolean isRIFF() {
-      return (this.id.compareTo("RIFF") == 0);
+   private boolean isRIFF(String id) {
+      return (id.compareTo("RIFF") == 0);
+   }
+
+   private String readString(LittleEndianDataInputStream dis, int len) throws IOException {
+      byte[] idbytes = new byte[len];
+      dis.read(idbytes);
+      return new String(idbytes).trim();
    }
 }

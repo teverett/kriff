@@ -6,10 +6,11 @@
 package com.khubla.kriff;
 
 import com.khubla.kriff.api.ChunkCallback;
+import com.khubla.kriff.domain.Chunk;
 
 public class ReportingChunkCallback implements ChunkCallback {
    @Override
-   public void chunk(String type, int length, int offset) {
-      System.out.println("Chunk '" + type + "' of length " + length + " at offset " + offset);
+   public void chunk(Chunk chunk) {
+      System.out.println(chunk.getChunkHeader().describe());
    }
 }

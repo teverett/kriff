@@ -5,22 +5,23 @@
  */
 package com.khubla.kriff.domain;
 
-import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.api.ChunkCallback;
+public class RIFFChunkHeader extends StandardChunkHeader {
+   /**
+    * type (only for RIFF and LIST)
+    */
+   protected final String type;
 
-public class RIFFFile {
-   private Chunk rootChunk = null;
-
-   public Chunk getRootChunk() {
-      return rootChunk;
+   public RIFFChunkHeader(String id, int length, String type, int headerOffset, int dataOffset) {
+      super(id, length, headerOffset, dataOffset);
+      this.type = type;
    }
 
-   public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
-      try {
-         rootChunk = new Chunk();
-         rootChunk.read(dis, chunkCallback);
-      } catch (Exception e) {
-         throw new Exception("Exception in read", e);
-      }
+   public String getType() {
+      return type;
+   }
+
+   @Override
+   public String describe() {
+      return "Chunk '" + id + "' of length " + length + " header offset " + this.headerOffset + " data offset " + this.dataOffset + " of type '" + this.type + "'";
    }
 }

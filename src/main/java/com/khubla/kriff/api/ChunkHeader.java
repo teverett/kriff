@@ -3,24 +3,18 @@
  * provided with the distribution. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.khubla.kriff.domain;
+package com.khubla.kriff.api;
 
-import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.api.ChunkCallback;
+public interface ChunkHeader {
+   String describe();
 
-public class RIFFFile {
-   private Chunk rootChunk = null;
+   // byte index of chunk header
+   int getHeaderOffset();
 
-   public Chunk getRootChunk() {
-      return rootChunk;
-   }
+   // length of chunk
+   int getLength();
 
-   public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
-      try {
-         rootChunk = new Chunk();
-         rootChunk.read(dis, chunkCallback);
-      } catch (Exception e) {
-         throw new Exception("Exception in read", e);
-      }
-   }
+   String getId();
+
+   int getDataOffset();
 }

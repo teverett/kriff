@@ -5,10 +5,12 @@
  */
 package com.khubla.kriff.api;
 
+import com.khubla.kriff.domain.Chunk;
+
 public interface ChunkCallback {
    /**
     * callback for each chunk
     * <p>offset is where the data in the chunk starts</p>
     */
-   void chunk(String type, int length, int offset);
+   void chunk(Chunk chunk);
 }

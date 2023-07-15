@@ -5,22 +5,51 @@
  */
 package com.khubla.kriff.domain;
 
-import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.api.ChunkCallback;
+import com.khubla.kriff.api.ChunkHeader;
 
-public class RIFFFile {
-   private Chunk rootChunk = null;
+public class StandardChunkHeader implements ChunkHeader {
+   /**
+    * id bytes
+    */
+   protected final String id;
+   /**
+    * length
+    */
+   protected final int length;
+   /**
+    * offset of header in file
+    */
+   protected final int headerOffset;
+   /**
+    * offset of data in file
+    */
+   protected final int dataOffset;
 
-   public Chunk getRootChunk() {
-      return rootChunk;
+   public StandardChunkHeader(String id, int length, int headerOffset, int dataOffset) {
+      this.id = id;
+      this.length = length;
+      this.headerOffset = headerOffset;
+      this.dataOffset = dataOffset;
    }
 
-   public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
-      try {
-         rootChunk = new Chunk();
-         rootChunk.read(dis, chunkCallback);
-      } catch (Exception e) {
-         throw new Exception("Exception in read", e);
-      }
+   public String getId() {
+      return id;
+   }
+
+   public int getLength() {
+      return length;
+   }
+
+   @Override
+   public String describe() {
+      return "Chunk '" + id + "' of length " + length + " header offset " + this.headerOffset + " data offset " + this.dataOffset;
+   }
+
+   public int getHeaderOffset() {
+      return headerOffset;
+   }
+
+   public int getDataOffset() {
+      return dataOffset;
    }
 }
