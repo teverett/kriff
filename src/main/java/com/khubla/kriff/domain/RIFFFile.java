@@ -6,7 +6,6 @@
 package com.khubla.kriff.domain;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.ReportingChunkCallback;
 import com.khubla.kriff.api.ChunkCallback;
 
 public class RIFFFile {

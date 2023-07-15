@@ -39,6 +39,18 @@ public class Chunk {
     * subchunks (RIFF and LIST)
     */
    private List<Chunk> chunks;
+   /**
+    * running byte count
+    */
+   private int count;
+
+   public Chunk() {
+      this.count = 0;
+   }
+
+   public Chunk(int count) {
+      this.count = count;
+   }
 
    protected void readHeader(LittleEndianDataInputStream dis) throws IOException {
       /*
@@ -47,10 +59,12 @@ public class Chunk {
       byte[] idbytes = new byte[4];
       dis.read(idbytes);
       id = new String(idbytes);
+      count += 4;
       /*
        * length
        */
       this.length = dis.readInt();
+      count += 4;
       /*
        * is riff?
        */
@@ -58,6 +72,7 @@ public class Chunk {
          this.chunks = new ArrayList<Chunk>();
          byte[] typebytes = new byte[4];
          dis.read(typebytes);
+         count += 4;
          type = new String(typebytes);
       } else {
          this.type = null;
@@ -67,19 +82,19 @@ public class Chunk {
    public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
       // header
       this.readHeader(dis);
-      chunkCallback.chunk(this.id, this.length,0);
+      chunkCallback.chunk(this.id, this.length, this.count);
       if (isRIFF()) {
-         int readbytes = 0;
-         while (readbytes < this.length) {
+         while (count < this.length) {
             // get chunk
-            Chunk chunk = new Chunk();
+            Chunk chunk = new Chunk(this.count);
             this.chunks.add(chunk);
             chunk.read(dis, chunkCallback);
-            readbytes += chunk.length + STANDARD_CHUNK_HEADER_SIZE;
+            count += chunk.length + STANDARD_CHUNK_HEADER_SIZE;
          }
       } else {
          // skip content
          dis.skipBytes(this.length);
+         count += this.length;
       }
    }
 
