@@ -1,3 +1,4 @@
+[![CI](https://github.com/teverett/kriff/actions/workflows/main.yml/badge.svg)](https://github.com/teverett/kriff/actions/workflows/main.yml)
 
 # KRIFF
 
