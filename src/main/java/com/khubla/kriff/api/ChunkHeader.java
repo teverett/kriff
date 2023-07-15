@@ -17,4 +17,7 @@ public interface ChunkHeader {
    String getId();
 
    int getDataOffset();
+
+   // only for RIFF and LIST
+   String getType();
 }

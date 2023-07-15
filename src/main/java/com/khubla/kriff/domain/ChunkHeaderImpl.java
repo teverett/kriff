@@ -5,23 +5,72 @@
  */
 package com.khubla.kriff.domain;
 
-public class RIFFChunkHeader extends StandardChunkHeader {
+import com.khubla.kriff.api.ChunkHeader;
+
+public class ChunkHeaderImpl implements ChunkHeader {
+   /**
+    * id bytes
+    */
+   protected final String id;
+   /**
+    * length
+    */
+   protected final int length;
+   /**
+    * offset of header in file
+    */
+   protected final int headerOffset;
+   /**
+    * offset of data in file
+    */
+   protected final int dataOffset;
    /**
     * type (only for RIFF and LIST)
     */
    protected final String type;
 
-   public RIFFChunkHeader(String id, int length, String type, int headerOffset, int dataOffset) {
-      super(id, length, headerOffset, dataOffset);
+   public ChunkHeaderImpl(String id, int length, int headerOffset, int dataOffset, String type) {
+      this.id = id;
+      this.length = length;
+      this.headerOffset = headerOffset;
+      this.dataOffset = dataOffset;
       this.type = type;
+   }
+
+   public ChunkHeaderImpl(String id, int length, int headerOffset, int dataOffset) {
+      this.id = id;
+      this.length = length;
+      this.headerOffset = headerOffset;
+      this.dataOffset = dataOffset;
+      this.type = null;
+   }
+
+   public String getId() {
+      return id;
+   }
+
+   public int getLength() {
+      return length;
+   }
+
+   @Override
+   public String describe() {
+      if (null == type) {
+         return "Chunk '" + id + "' of length " + length + " header offset " + this.headerOffset + " data offset " + this.dataOffset;
+      } else {
+         return "Chunk '" + id + "' of length " + length + " header offset " + this.headerOffset + " data offset " + this.dataOffset + " of type '" + this.type + "'";
+      }
    }
 
    public String getType() {
       return type;
    }
 
-   @Override
-   public String describe() {
-      return "Chunk '" + id + "' of length " + length + " header offset " + this.headerOffset + " data offset " + this.dataOffset + " of type '" + this.type + "'";
+   public int getHeaderOffset() {
+      return headerOffset;
+   }
+
+   public int getDataOffset() {
+      return dataOffset;
    }
 }

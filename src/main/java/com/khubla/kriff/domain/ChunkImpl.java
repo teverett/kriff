@@ -16,11 +16,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RIFFChunk implements Chunk {
+public class ChunkImpl implements Chunk {
    /**
     * logger
     */
-   private static final Logger logger = LogManager.getLogger(RIFFChunk.class);
+   private static final Logger logger = LogManager.getLogger(ChunkImpl.class);
    /**
     * subchunks (RIFF and LIST)
     */
@@ -34,11 +34,11 @@ public class RIFFChunk implements Chunk {
     */
    private ChunkHeader chunkHeader;
 
-   public RIFFChunk() {
+   public ChunkImpl() {
       this.count = 0;
    }
 
-   public RIFFChunk(int count) {
+   public ChunkImpl(int count) {
       this.count = count;
    }
 
@@ -53,15 +53,15 @@ public class RIFFChunk implements Chunk {
        */
       int length = dis.readInt();
       /*
-       * is riff?
+       * is riff or list?
        */
-      if (isRIFF(id)) {
+      if (isCompound(id)) {
          this.chunks = new ArrayList<Chunk>();
          String type = readString(dis, 4);
-         this.chunkHeader = new RIFFChunkHeader(id, length, type, count, count + 12);
+         this.chunkHeader = new ChunkHeaderImpl(id, length, count, count + 12, type);
          this.count += 12;
       } else {
-         this.chunkHeader = new StandardChunkHeader(id, length, count, count + 8);
+         this.chunkHeader = new ChunkHeaderImpl(id, length, count, count + 8);
          this.count += 8;
       }
    }
@@ -78,10 +78,10 @@ public class RIFFChunk implements Chunk {
       // header
       this.readHeader(dis);
       chunkCallback.chunk(this);
-      if (isRIFF(this.chunkHeader.getId())) {
+      if (isCompound(this.chunkHeader.getId())) {
          while (count < this.chunkHeader.getLength()) {
             // get chunk
-            RIFFChunk RIFFChunk = new RIFFChunk(this.count);
+            ChunkImpl RIFFChunk = new ChunkImpl(this.count);
             RIFFChunk.read(dis, chunkCallback);
             this.chunks.add(RIFFChunk);
             this.count = RIFFChunk.count;
@@ -93,8 +93,8 @@ public class RIFFChunk implements Chunk {
       }
    }
 
-   private boolean isRIFF(String id) {
-      return (id.compareTo("RIFF") == 0);
+   private boolean isCompound(String id) {
+      return ((id.compareTo("RIFF") == 0) || (id.compareTo("LIST") == 0));
    }
 
    private String readString(LittleEndianDataInputStream dis, int len) throws IOException {

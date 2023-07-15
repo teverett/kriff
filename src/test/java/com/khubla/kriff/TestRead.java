@@ -7,7 +7,6 @@ package com.khubla.kriff;
 
 import com.khubla.kriff.api.Chunk;
 import com.khubla.kriff.api.ChunkHeader;
-import com.khubla.kriff.domain.RIFFChunkHeader;
 import com.khubla.kriff.domain.RIFFFile;
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +29,7 @@ public class TestRead {
          ChunkHeader chunkHeader = rootChunk.getChunkHeader();
          assertNotNull(chunkHeader);
          assertEquals(0, chunkHeader.getId().compareTo("RIFF"));
-         RIFFChunkHeader riffChunkHeader = (RIFFChunkHeader) chunkHeader;
-         assertEquals(0, riffChunkHeader.getType().compareTo("WAVE"));
+         assertEquals(0, chunkHeader.getType().compareTo("WAVE"));
          assertEquals(1323036, chunkHeader.getLength());
          assertEquals(0, chunkHeader.getHeaderOffset());
          assertEquals(12, chunkHeader.getDataOffset());

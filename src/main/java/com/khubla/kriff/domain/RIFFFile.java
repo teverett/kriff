@@ -18,7 +18,7 @@ public class RIFFFile {
 
    public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
       try {
-         RIFFChunk riffChunk = new RIFFChunk();
+         ChunkImpl riffChunk = new ChunkImpl();
          riffChunk.read(dis, chunkCallback);
          this.rootChunk = riffChunk;
       } catch (Exception e) {
