@@ -6,5 +6,13 @@ A Java library for reading [RIFF](https://en.wikipedia.org/wiki/Resource_Interch
 
 ## Usage
 
+Maven coordinates:
+
+<code>
+	<groupId>com.khubla.kriff</groupId>
+	<artifactId>kriff</artifactId>
+    <version>1.0</version>
+</code>
+
 Use the type [RIFFFile](https://github.com/teverett/kriff/blob/main/src/main/java/com/khubla/kriff/domain/RIFFFile.java) to read the RIFF file from an `InputStream`. 
 KRIFF will call the callback [ChunkCallback](https://github.com/teverett/kriff/blob/main/src/main/java/com/khubla/kriff/api/ChunkCallback.java) for each chunk in the file.
