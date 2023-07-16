@@ -5,6 +5,9 @@
  */
 package com.khubla.kriff.riff.api;
 
+/**
+ * chunks are NOT passed to this callback in the order they appear in the file, but in the order they are fully read. Therefore, RIFF and LIST chunks are passed AFTER the subchunks inside them
+ */
 public interface ChunkCallback {
    /**
     * callback for each chunk

@@ -12,11 +12,11 @@ import java.io.InputStream;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class TestRead {
+public class TestReadWAV {
    @Test
    public void test1() {
       try {
-         InputStream is = TestRead.class.getResourceAsStream("/PinkPanther30.wav");
+         InputStream is = TestReadWAV.class.getResourceAsStream("/PinkPanther30.wav");
          WAVFileReader wavFileReader = new WAVFileReader();
          WAVFile wavFile = wavFileReader.read(is);
          assertNotNull(wavFile);

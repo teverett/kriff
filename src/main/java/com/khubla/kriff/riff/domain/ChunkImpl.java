@@ -33,6 +33,10 @@ public class ChunkImpl implements Chunk {
     * header
     */
    private ChunkHeader chunkHeader;
+   /**
+    * data
+    */
+   private byte[] data = null;
 
    public ChunkImpl() {
       this.count = 0;
@@ -74,13 +78,13 @@ public class ChunkImpl implements Chunk {
       return this.chunks;
    }
 
+   public byte[] getData() {
+      return data;
+   }
+
    public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
       // header
       this.readHeader(dis);
-      // callback
-      if (null != chunkCallback) {
-         chunkCallback.chunk(this);
-      }
       // contents
       if (isCompound(this.chunkHeader.getId())) {
          while (count < this.chunkHeader.getLength()) {
@@ -91,9 +95,14 @@ public class ChunkImpl implements Chunk {
             this.count = RIFFChunk.count;
          }
       } else {
-         // skip content
-         dis.skipBytes(this.chunkHeader.getLength());
+         // read content
+         this.data = new byte[this.chunkHeader.getLength()];
+         dis.read(this.data);
          count += this.chunkHeader.getLength();
+      }
+      // callback
+      if (null != chunkCallback) {
+         chunkCallback.chunk(this);
       }
    }
 

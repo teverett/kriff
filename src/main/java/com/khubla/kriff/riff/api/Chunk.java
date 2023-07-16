@@ -11,4 +11,6 @@ public interface Chunk {
    ChunkHeader getChunkHeader();
 
    List<Chunk> getChunks();
+
+   byte[] getData();
 }

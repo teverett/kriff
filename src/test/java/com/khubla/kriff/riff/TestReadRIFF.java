@@ -13,11 +13,11 @@ import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestRead {
+public class TestReadRIFF {
    @Test
    public void test1() {
       try {
-         InputStream is = TestRead.class.getResourceAsStream("/PinkPanther30.wav");
+         InputStream is = TestReadRIFF.class.getResourceAsStream("/PinkPanther30.wav");
          ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
          RIFFFileReader riffFileReader = new RIFFFileReader();
          RIFFFile riffFile = riffFileReader.read(is, reportingChunkCallback);
@@ -25,6 +25,7 @@ public class TestRead {
          assertNotNull(riffFile.getRootChunk());
          // root
          Chunk rootChunk = riffFile.getRootChunk();
+         assertNull(rootChunk.getData());
          ChunkHeader chunkHeader = rootChunk.getChunkHeader();
          assertNotNull(chunkHeader);
          assertEquals(0, chunkHeader.getId().compareTo("RIFF"));
@@ -35,16 +36,22 @@ public class TestRead {
          assertNotNull(rootChunk.getChunks());
          assertEquals(2, rootChunk.getChunks().size());
          // 1
-         Chunk Chunk1 = rootChunk.getChunks().get(0);
-         ChunkHeader chunkHeader1 = Chunk1.getChunkHeader();
+         Chunk chunk1 = rootChunk.getChunks().get(0);
+         assertNotNull(chunk1.getData());
+         assertNull(chunk1.getChunks());
+         assertEquals(16, chunk1.getData().length);
+         ChunkHeader chunkHeader1 = chunk1.getChunkHeader();
          assertNotNull(chunkHeader1);
          assertEquals(0, chunkHeader1.getId().compareTo("fmt"));
          assertEquals(16, chunkHeader1.getLength());
          assertEquals(12, chunkHeader1.getHeaderOffset());
          assertEquals(20, chunkHeader1.getDataOffset());
          // 2
-         Chunk Chunk2 = rootChunk.getChunks().get(1);
-         ChunkHeader chunkHeader2 = Chunk2.getChunkHeader();
+         Chunk chunk2 = rootChunk.getChunks().get(1);
+         assertNotNull(chunk2.getData());
+         assertNull(chunk2.getChunks());
+         assertEquals(1323000, chunk2.getData().length);
+         ChunkHeader chunkHeader2 = chunk2.getChunkHeader();
          assertNotNull(chunkHeader2);
          assertEquals(0, chunkHeader2.getId().compareTo("data"));
          assertEquals(1323000, chunkHeader2.getLength());
