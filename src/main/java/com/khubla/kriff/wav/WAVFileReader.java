@@ -47,8 +47,10 @@ public class WAVFileReader implements ChunkCallback {
    }
 
    private void readFmt(Chunk chunk) {
+      Format format = new Format();
    }
 
    private void readData(Chunk chunk) {
+      Data data = new Data();
    }
 }

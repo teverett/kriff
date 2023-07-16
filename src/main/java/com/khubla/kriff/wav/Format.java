@@ -6,4 +6,9 @@
 package com.khubla.kriff.wav;
 
 public class Format {
+   public short wFormatTag;
+   public short wChannels;
+   public int dwSamplesPerSec;
+   public int dwAvgBytesPerSec;
+   public short wBlockAlign;
 }
