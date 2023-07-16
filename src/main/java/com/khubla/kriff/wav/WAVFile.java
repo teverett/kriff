@@ -6,16 +6,8 @@
 package com.khubla.kriff.wav;
 
 public class WAVFile {
-   private Format format;
+   private WAVFormat wavFormat;
    private byte[] data;
-
-   public Format getFormat() {
-      return format;
-   }
-
-   public void setFormat(Format format) {
-      this.format = format;
-   }
 
    public byte[] getData() {
       return data;
@@ -23,5 +15,13 @@ public class WAVFile {
 
    public void setData(byte[] data) {
       this.data = data;
+   }
+
+   public WAVFormat getWavFormat() {
+      return wavFormat;
+   }
+
+   public void setWavFormat(WAVFormat wavFormat) {
+      this.wavFormat = wavFormat;
    }
 }

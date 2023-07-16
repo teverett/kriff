@@ -50,15 +50,15 @@ public class WAVFileReader implements ChunkCallback {
    }
 
    private void readFmt(Chunk chunk) throws IOException {
-      Format format = new Format();
+      WAVFormat wavFormat = new WAVFormat();
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(chunk.getData());
       LittleEndianDataInputStream littleEndianDataInputStream = new LittleEndianDataInputStream(byteArrayInputStream);
-      format.wFormatTag = littleEndianDataInputStream.readShort();
-      format.wChannels = littleEndianDataInputStream.readShort();
-      format.dwSamplesPerSec = littleEndianDataInputStream.readInt();
-      format.dwAvgBytesPerSec = littleEndianDataInputStream.readInt();
-      format.wBlockAlign = littleEndianDataInputStream.readShort();
-      this.wavFile.setFormat(format);
+      wavFormat.wFormatTag = littleEndianDataInputStream.readShort();
+      wavFormat.wChannels = littleEndianDataInputStream.readShort();
+      wavFormat.dwSamplesPerSec = littleEndianDataInputStream.readInt();
+      wavFormat.dwAvgBytesPerSec = littleEndianDataInputStream.readInt();
+      wavFormat.wBlockAlign = littleEndianDataInputStream.readShort();
+      this.wavFile.setWavFormat(wavFormat);
    }
 
    private void readData(Chunk chunk) {

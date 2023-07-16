@@ -20,12 +20,12 @@ public class TestReadWAV {
          WAVFile wavFile = wavFileReader.read(is);
          assertNotNull(wavFile);
          assertNotNull(wavFile.getData());
-         assertNotNull(wavFile.getFormat());
-         assertEquals(44100, wavFile.getFormat().dwAvgBytesPerSec);
-         assertEquals(1, wavFile.getFormat().wFormatTag);
-         assertEquals(22050, wavFile.getFormat().dwSamplesPerSec);
-         assertEquals(2, wavFile.getFormat().wBlockAlign);
-         assertEquals(1, wavFile.getFormat().wChannels);
+         assertNotNull(wavFile.getWavFormat());
+         assertEquals(44100, wavFile.getWavFormat().dwAvgBytesPerSec);
+         assertEquals(1, wavFile.getWavFormat().wFormatTag);
+         assertEquals(22050, wavFile.getWavFormat().dwSamplesPerSec);
+         assertEquals(2, wavFile.getWavFormat().wBlockAlign);
+         assertEquals(1, wavFile.getWavFormat().wChannels);
       } catch (final Exception e) {
          e.printStackTrace();
          fail();
