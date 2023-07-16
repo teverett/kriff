@@ -5,12 +5,15 @@
  */
 package com.khubla.kriff.wav;
 
+import com.google.common.io.LittleEndianDataInputStream;
 import com.khubla.kriff.riff.RIFFFileReader;
 import com.khubla.kriff.riff.api.Chunk;
 import com.khubla.kriff.riff.api.ChunkCallback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class WAVFileReader implements ChunkCallback {
@@ -38,7 +41,7 @@ public class WAVFileReader implements ChunkCallback {
    }
 
    @Override
-   public void chunk(Chunk chunk) {
+   public void chunk(Chunk chunk) throws IOException {
       if (chunk.getChunkHeader().getId().compareTo("fmt") == 0) {
          readFmt(chunk);
       } else if (chunk.getChunkHeader().getId().compareTo("data") == 0) {
@@ -46,11 +49,19 @@ public class WAVFileReader implements ChunkCallback {
       }
    }
 
-   private void readFmt(Chunk chunk) {
+   private void readFmt(Chunk chunk) throws IOException {
       Format format = new Format();
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(chunk.getData());
+      LittleEndianDataInputStream littleEndianDataInputStream = new LittleEndianDataInputStream(byteArrayInputStream);
+      format.wFormatTag = littleEndianDataInputStream.readShort();
+      format.wChannels = littleEndianDataInputStream.readShort();
+      format.dwSamplesPerSec = littleEndianDataInputStream.readInt();
+      format.dwAvgBytesPerSec = littleEndianDataInputStream.readInt();
+      format.wBlockAlign = littleEndianDataInputStream.readShort();
+      this.wavFile.setFormat(format);
    }
 
    private void readData(Chunk chunk) {
-      Data data = new Data();
+      this.wavFile.setData(chunk.getData());
    }
 }

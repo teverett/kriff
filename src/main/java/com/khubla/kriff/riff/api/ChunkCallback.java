@@ -5,6 +5,8 @@
  */
 package com.khubla.kriff.riff.api;
 
+import java.io.IOException;
+
 /**
  * chunks are NOT passed to this callback in the order they appear in the file, but in the order they are fully read. Therefore, RIFF and LIST chunks are passed AFTER the subchunks inside them
  */
@@ -13,5 +15,5 @@ public interface ChunkCallback {
     * callback for each chunk
     * <p>offset is where the data in the chunk starts</p>
     */
-   void chunk(Chunk chunk);
+   void chunk(Chunk chunk) throws IOException;
 }

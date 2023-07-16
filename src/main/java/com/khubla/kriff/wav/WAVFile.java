@@ -7,5 +7,21 @@ package com.khubla.kriff.wav;
 
 public class WAVFile {
    private Format format;
-   private Data data;
+   private byte[] data;
+
+   public Format getFormat() {
+      return format;
+   }
+
+   public void setFormat(Format format) {
+      this.format = format;
+   }
+
+   public byte[] getData() {
+      return data;
+   }
+
+   public void setData(byte[] data) {
+      this.data = data;
+   }
 }

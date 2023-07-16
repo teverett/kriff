@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestReadWAV {
    @Test
@@ -20,6 +19,13 @@ public class TestReadWAV {
          WAVFileReader wavFileReader = new WAVFileReader();
          WAVFile wavFile = wavFileReader.read(is);
          assertNotNull(wavFile);
+         assertNotNull(wavFile.getData());
+         assertNotNull(wavFile.getFormat());
+         assertEquals(44100, wavFile.getFormat().dwAvgBytesPerSec);
+         assertEquals(1, wavFile.getFormat().wFormatTag);
+         assertEquals(22050, wavFile.getFormat().dwSamplesPerSec);
+         assertEquals(2, wavFile.getFormat().wBlockAlign);
+         assertEquals(1, wavFile.getFormat().wChannels);
       } catch (final Exception e) {
          e.printStackTrace();
          fail();
