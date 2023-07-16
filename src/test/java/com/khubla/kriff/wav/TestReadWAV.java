@@ -52,6 +52,9 @@ public class TestReadWAV {
          // cue
          assertNotNull(wavFile.getWavCues());
          assertEquals(1, wavFile.getWavCues().dwCuePoints);
+         // note
+         assertNotNull(wavFile.getWavNote());
+         assertEquals("sfif", wavFile.getWavNote().dwName);
       } catch (final Exception e) {
          e.printStackTrace();
          fail();

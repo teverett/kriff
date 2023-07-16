@@ -52,7 +52,11 @@ public class WAVFileReader implements ChunkCallback {
       } else if (chunk.getChunkHeader().getId().compareTo("cue") == 0) {
          readCue(chunk);
       } else if (chunk.getChunkHeader().getId().compareTo("note") == 0) {
-         readNote(chunk);
+         WAVNoteOrLabel wavNoteOrLabel = readNoteOrLabel(chunk);
+         this.wavFile.setWavNote(wavNoteOrLabel);
+      } else if (chunk.getChunkHeader().getId().compareTo("labl") == 0) {
+         WAVNoteOrLabel wavNoteOrLabel = readNoteOrLabel(chunk);
+         this.wavFile.setWavLabel(wavNoteOrLabel);
       }
    }
 
@@ -97,6 +101,12 @@ public class WAVFileReader implements ChunkCallback {
       this.wavFile.setWavCues(wavCues);
    }
 
-   private void readNote(Chunk chunk) {
+   private WAVNoteOrLabel readNoteOrLabel(Chunk chunk) throws IOException {
+      WAVNoteOrLabel wavNoteOrLabel = new WAVNoteOrLabel();
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(chunk.getData());
+      LittleEndianDataInputStream littleEndianDataInputStream = new LittleEndianDataInputStream(byteArrayInputStream);
+      wavNoteOrLabel.dwName = RIFFUtil.readString(littleEndianDataInputStream, 4);
+      wavNoteOrLabel.note = RIFFUtil.readSZString(littleEndianDataInputStream, chunk.getData().length - 4);
+      return wavNoteOrLabel;
    }
 }

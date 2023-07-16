@@ -5,50 +5,7 @@
  */
 package com.khubla.kriff.wav;
 
-public class WAVFile {
-   private WAVFormat wavFormat;
-   private WAVCues wavCues;
-   private byte[] data;
-   private WAVNoteOrLabel wavNote;
-   private WAVNoteOrLabel wavLabel;
-
-   public WAVNoteOrLabel getWavNote() {
-      return wavNote;
-   }
-
-   public void setWavNote(WAVNoteOrLabel wavNote) {
-      this.wavNote = wavNote;
-   }
-
-   public WAVNoteOrLabel getWavLabel() {
-      return wavLabel;
-   }
-
-   public void setWavLabel(WAVNoteOrLabel wavLabel) {
-      this.wavLabel = wavLabel;
-   }
-
-   public byte[] getData() {
-      return data;
-   }
-
-   public void setData(byte[] data) {
-      this.data = data;
-   }
-
-   public WAVFormat getWavFormat() {
-      return wavFormat;
-   }
-
-   public void setWavFormat(WAVFormat wavFormat) {
-      this.wavFormat = wavFormat;
-   }
-
-   public WAVCues getWavCues() {
-      return wavCues;
-   }
-
-   public void setWavCues(WAVCues wavCues) {
-      this.wavCues = wavCues;
-   }
+public class WAVNoteOrLabel {
+   public String dwName;
+   public String note;
 }
