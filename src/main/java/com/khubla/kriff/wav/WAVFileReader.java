@@ -10,6 +10,7 @@ import com.khubla.kriff.riff.RIFFFileReader;
 import com.khubla.kriff.riff.RIFFUtil;
 import com.khubla.kriff.riff.api.Chunk;
 import com.khubla.kriff.riff.api.ChunkCallback;
+import com.khubla.kriff.riff.api.ChunkHeader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,7 +43,12 @@ public class WAVFileReader implements ChunkCallback {
    }
 
    @Override
-   public void chunk(Chunk chunk) throws IOException {
+   public void chunkStart(ChunkHeader chunkHeader) throws IOException {
+      // nada
+   }
+
+   @Override
+   public void chunkEnd(Chunk chunk) throws IOException {
       if (chunk.getChunkHeader().getId().compareTo("fmt") == 0) {
          readFmt(chunk);
       } else if (chunk.getChunkHeader().getId().compareTo("data") == 0) {

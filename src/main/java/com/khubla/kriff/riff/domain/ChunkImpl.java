@@ -86,6 +86,10 @@ public class ChunkImpl implements Chunk {
    public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
       // header
       this.readHeader(dis);
+      logger.info(this.chunkHeader.describe());
+      if (null != chunkCallback) {
+         chunkCallback.chunkStart(this.chunkHeader);
+      }
       // contents
       if (isCompound(this.chunkHeader.getId())) {
          while (count < this.chunkHeader.getLength()) {
@@ -103,11 +107,11 @@ public class ChunkImpl implements Chunk {
       }
       // callback
       if (null != chunkCallback) {
-         chunkCallback.chunk(this);
+         chunkCallback.chunkEnd(this);
       }
    }
 
    private boolean isCompound(String id) {
-      return ((id.compareTo("RIFF") == 0) || (id.compareTo("LIST") == 0));
+      return ((id.compareTo("RIFF") == 0) || (id.compareTo("LIST") == 0) || (id.compareTo("INFO") == 0));
    }
 }

@@ -3,19 +3,27 @@
  * provided with the distribution. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.khubla.kriff.riff.api;
+package com.khubla.kriff.midi;
 
-import java.io.IOException;
+import org.junit.jupiter.api.Test;
 
-public interface ChunkCallback {
-   /**
-    * Chunk read has started. This method is called in the order that chunks appear in the file
-    * <p>offset is where the data in the chunk starts</p>
-    */
-   void chunkStart(ChunkHeader chunkHeader) throws IOException;
+import java.io.InputStream;
 
-   /**
-    * chunk read is complete.  This order is NOT called in the order that chunks appear in the file, since chunks can be nested
-    */
-   void chunkEnd(Chunk chunk) throws IOException;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
+public class TestReadRMID {
+   @Test
+   public void test1() {
+      try {
+         InputStream is = TestReadRMID.class.getResourceAsStream("/sample.rmi");
+         MIDIFileReader midiFileReader = new MIDIFileReader();
+         MIDIFile midiFile = midiFileReader.read(is);
+         assertNotNull(midiFile);
+         //     assertNotNull(midiFile.getData());
+      } catch (final Exception e) {
+         e.printStackTrace();
+         fail();
+      }
+   }
 }
