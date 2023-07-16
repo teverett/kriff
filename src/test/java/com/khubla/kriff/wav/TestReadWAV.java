@@ -26,6 +26,32 @@ public class TestReadWAV {
          assertEquals(22050, wavFile.getWavFormat().dwSamplesPerSec);
          assertEquals(2, wavFile.getWavFormat().wBlockAlign);
          assertEquals(1, wavFile.getWavFormat().wChannels);
+         assertEquals(16, wavFile.getWavFormat().wBitsPerSample);
+      } catch (final Exception e) {
+         e.printStackTrace();
+         fail();
+      }
+   }
+
+   @Test
+   public void test2() {
+      try {
+         InputStream is = TestReadWAV.class.getResourceAsStream("/stereol.wav");
+         WAVFileReader wavFileReader = new WAVFileReader();
+         WAVFile wavFile = wavFileReader.read(is);
+         // wav
+         assertNotNull(wavFile);
+         assertNotNull(wavFile.getData());
+         assertNotNull(wavFile.getWavFormat());
+         assertEquals(88200, wavFile.getWavFormat().dwAvgBytesPerSec);
+         assertEquals(WAVFormat.Format.PCM, wavFile.getWavFormat().wFormatTag);
+         assertEquals(22050, wavFile.getWavFormat().dwSamplesPerSec);
+         assertEquals(4, wavFile.getWavFormat().wBlockAlign);
+         assertEquals(2, wavFile.getWavFormat().wChannels);
+         assertEquals(16, wavFile.getWavFormat().wBitsPerSample);
+         // cue
+         assertNotNull(wavFile.getWavCues());
+         assertEquals(1, wavFile.getWavCues().dwCuePoints);
       } catch (final Exception e) {
          e.printStackTrace();
          fail();

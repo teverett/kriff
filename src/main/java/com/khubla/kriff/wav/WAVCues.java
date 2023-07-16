@@ -5,36 +5,17 @@
  */
 package com.khubla.kriff.wav;
 
-import java.util.HashMap;
-import java.util.Map;
+public class WAVCues {
+   public int dwCuePoints;
+   public WAVCuePoint[] cuePoints;
 
-public class WAVFormat {
-   public Format wFormatTag;
-   public short wChannels;
-   public int dwSamplesPerSec;
-   public int dwAvgBytesPerSec;
-   public short wBlockAlign;
-   // PCM only
-   public short wBitsPerSample;
-
-   public enum Format {
-      PCM(1), MULAW(0x0101), ALAW(0x0102), ADPCM(0x0103);
-      // Mapping difficulty to difficulty id
-      private static final Map<Integer, Format> _map = new HashMap<Integer, Format>();
-
-      static {
-         for (Format format : Format.values())
-            _map.put(format.value, format);
-      }
-
-      int value;
-
-      Format(int value) {
-         this.value = value;
-      }
-
-      public static Format from(int format) {
-         return _map.get(format);
-      }
+   public static class WAVCuePoint {
+      public String dwName;
+      public int dwPosition;
+      // 4 bytes
+      public String fccChunk;
+      public int dwChunkStart;
+      public int dwBlockStart;
+      public int dwSampleOffset;
    }
 }

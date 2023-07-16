@@ -6,6 +6,7 @@
 package com.khubla.kriff.riff.domain;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.khubla.kriff.riff.RIFFUtil;
 import com.khubla.kriff.riff.api.Chunk;
 import com.khubla.kriff.riff.api.ChunkCallback;
 import com.khubla.kriff.riff.api.ChunkHeader;
@@ -50,7 +51,7 @@ public class ChunkImpl implements Chunk {
       /*
        * id
        */
-      String id = readString(dis, 4);
+      String id = RIFFUtil.readString(dis, 4);
 
       /*
        * length
@@ -61,7 +62,7 @@ public class ChunkImpl implements Chunk {
        */
       if (isCompound(id)) {
          this.chunks = new ArrayList<Chunk>();
-         String type = readString(dis, 4);
+         String type = RIFFUtil.readString(dis, 4);
          this.chunkHeader = new ChunkHeaderImpl(id, length, count, count + 12, type);
          this.count += 12;
       } else {
@@ -108,11 +109,5 @@ public class ChunkImpl implements Chunk {
 
    private boolean isCompound(String id) {
       return ((id.compareTo("RIFF") == 0) || (id.compareTo("LIST") == 0));
-   }
-
-   private String readString(LittleEndianDataInputStream dis, int len) throws IOException {
-      byte[] idbytes = new byte[len];
-      dis.read(idbytes);
-      return new String(idbytes).trim();
    }
 }

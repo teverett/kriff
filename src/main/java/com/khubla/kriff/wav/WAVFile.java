@@ -7,6 +7,7 @@ package com.khubla.kriff.wav;
 
 public class WAVFile {
    private WAVFormat wavFormat;
+   private WAVCues wavCues;
    private byte[] data;
 
    public byte[] getData() {
@@ -23,5 +24,13 @@ public class WAVFile {
 
    public void setWavFormat(WAVFormat wavFormat) {
       this.wavFormat = wavFormat;
+   }
+
+   public WAVCues getWavCues() {
+      return wavCues;
+   }
+
+   public void setWavCues(WAVCues wavCues) {
+      this.wavCues = wavCues;
    }
 }

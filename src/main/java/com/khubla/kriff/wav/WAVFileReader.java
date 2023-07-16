@@ -7,6 +7,7 @@ package com.khubla.kriff.wav;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.khubla.kriff.riff.RIFFFileReader;
+import com.khubla.kriff.riff.RIFFUtil;
 import com.khubla.kriff.riff.api.Chunk;
 import com.khubla.kriff.riff.api.ChunkCallback;
 import org.apache.logging.log4j.LogManager;
@@ -46,6 +47,12 @@ public class WAVFileReader implements ChunkCallback {
          readFmt(chunk);
       } else if (chunk.getChunkHeader().getId().compareTo("data") == 0) {
          readData(chunk);
+      } else if (chunk.getChunkHeader().getId().compareTo("PEAK") == 0) {
+         readPeak(chunk);
+      } else if (chunk.getChunkHeader().getId().compareTo("cue") == 0) {
+         readCue(chunk);
+      } else if (chunk.getChunkHeader().getId().compareTo("note") == 0) {
+         readNote(chunk);
       }
    }
 
@@ -58,10 +65,38 @@ public class WAVFileReader implements ChunkCallback {
       wavFormat.dwSamplesPerSec = littleEndianDataInputStream.readInt();
       wavFormat.dwAvgBytesPerSec = littleEndianDataInputStream.readInt();
       wavFormat.wBlockAlign = littleEndianDataInputStream.readShort();
+      if (wavFormat.wFormatTag == WAVFormat.Format.PCM) {
+         wavFormat.wBitsPerSample = littleEndianDataInputStream.readShort();
+      }
       this.wavFile.setWavFormat(wavFormat);
    }
 
    private void readData(Chunk chunk) {
       this.wavFile.setData(chunk.getData());
+   }
+
+   private void readPeak(Chunk chunk) {
+   }
+
+   private void readCue(Chunk chunk) throws IOException {
+      WAVCues wavCues = new WAVCues();
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(chunk.getData());
+      LittleEndianDataInputStream littleEndianDataInputStream = new LittleEndianDataInputStream(byteArrayInputStream);
+      wavCues.dwCuePoints = littleEndianDataInputStream.readInt();
+      wavCues.cuePoints = new WAVCues.WAVCuePoint[wavCues.dwCuePoints];
+      for (int i = 0; i < wavCues.dwCuePoints; i++) {
+         WAVCues.WAVCuePoint wavCuePoint = new WAVCues.WAVCuePoint();
+         wavCuePoint.dwName = RIFFUtil.readString(littleEndianDataInputStream, 4);
+         wavCuePoint.dwPosition = littleEndianDataInputStream.readInt();
+         wavCuePoint.fccChunk = RIFFUtil.readString(littleEndianDataInputStream, 4);
+         wavCuePoint.dwChunkStart = littleEndianDataInputStream.readInt();
+         wavCuePoint.dwBlockStart = littleEndianDataInputStream.readInt();
+         wavCuePoint.dwSampleOffset = littleEndianDataInputStream.readInt();
+         wavCues.cuePoints[i] = wavCuePoint;
+      }
+      this.wavFile.setWavCues(wavCues);
+   }
+
+   private void readNote(Chunk chunk) {
    }
 }
