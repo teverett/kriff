@@ -10,6 +10,7 @@ import com.google.common.io.LittleEndianDataInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 public class RIFFUtil {
    public static String readString(LittleEndianDataInputStream dis, int len) throws IOException {
@@ -32,5 +33,9 @@ public class RIFFUtil {
          b = dis.readByte();
       }
       return byteArrayOutputStream.toString(StandardCharsets.UTF_8).trim();
+   }
+
+   public static Date parseDate(String dateString) {
+      return null;
    }
 }

@@ -55,6 +55,7 @@ public class TestReadWAV {
          // note
          assertNotNull(wavFile.getWavNote());
          assertEquals("sfif", wavFile.getWavNote().dwName);
+         assertEquals("DATE\nE24F3437", wavFile.getWavNote().note);
       } catch (final Exception e) {
          e.printStackTrace();
          fail();
