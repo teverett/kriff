@@ -3,12 +3,12 @@
  * provided with the distribution. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.khubla.kriff.domain;
+package com.khubla.kriff.riff.domain.domain;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.api.Chunk;
-import com.khubla.kriff.api.ChunkCallback;
-import com.khubla.kriff.api.ChunkHeader;
+import com.khubla.kriff.riff.api.Chunk;
+import com.khubla.kriff.riff.api.ChunkCallback;
+import com.khubla.kriff.riff.api.ChunkHeader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -77,7 +77,11 @@ public class ChunkImpl implements Chunk {
    public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
       // header
       this.readHeader(dis);
-      chunkCallback.chunk(this);
+      // callback
+      if (null != chunkCallback) {
+         chunkCallback.chunk(this);
+      }
+      // contents
       if (isCompound(this.chunkHeader.getId())) {
          while (count < this.chunkHeader.getLength()) {
             // get chunk
