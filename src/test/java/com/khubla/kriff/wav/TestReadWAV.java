@@ -22,7 +22,7 @@ public class TestReadWAV {
          assertNotNull(wavFile.getData());
          assertNotNull(wavFile.getWavFormat());
          assertEquals(44100, wavFile.getWavFormat().dwAvgBytesPerSec);
-         assertEquals(1, wavFile.getWavFormat().wFormatTag);
+         assertEquals(WAVFormat.Format.PCM, wavFile.getWavFormat().wFormatTag);
          assertEquals(22050, wavFile.getWavFormat().dwSamplesPerSec);
          assertEquals(2, wavFile.getWavFormat().wBlockAlign);
          assertEquals(1, wavFile.getWavFormat().wChannels);

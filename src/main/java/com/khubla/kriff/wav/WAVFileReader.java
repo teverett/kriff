@@ -53,7 +53,7 @@ public class WAVFileReader implements ChunkCallback {
       WAVFormat wavFormat = new WAVFormat();
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(chunk.getData());
       LittleEndianDataInputStream littleEndianDataInputStream = new LittleEndianDataInputStream(byteArrayInputStream);
-      wavFormat.wFormatTag = littleEndianDataInputStream.readShort();
+      wavFormat.wFormatTag = WAVFormat.Format.from(littleEndianDataInputStream.readShort());
       wavFormat.wChannels = littleEndianDataInputStream.readShort();
       wavFormat.dwSamplesPerSec = littleEndianDataInputStream.readInt();
       wavFormat.dwAvgBytesPerSec = littleEndianDataInputStream.readInt();
