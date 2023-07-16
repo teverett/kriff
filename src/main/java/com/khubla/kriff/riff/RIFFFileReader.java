@@ -7,7 +7,6 @@ package com.khubla.kriff.riff;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.khubla.kriff.riff.api.ChunkCallback;
-import com.khubla.kriff.riff.domain.domain.RIFFFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

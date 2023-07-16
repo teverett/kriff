@@ -7,7 +7,6 @@ package com.khubla.kriff.riff;
 
 import com.khubla.kriff.riff.api.Chunk;
 import com.khubla.kriff.riff.api.ChunkHeader;
-import com.khubla.kriff.riff.domain.domain.RIFFFile;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
