@@ -7,7 +7,6 @@ package com.khubla.kriff.riff;
 
 import com.khubla.kriff.riff.api.ChunkHeader;
 import com.khubla.kriff.riff.impl.*;
-import com.khubla.kriff.riff.impl.midi.DISPChunkImpl;
 import com.khubla.kriff.riff.impl.wav.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

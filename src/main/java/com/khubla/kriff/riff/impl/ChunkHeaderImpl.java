@@ -13,7 +13,7 @@ public class ChunkHeaderImpl implements ChunkHeader {
     */
    protected final String id;
    /**
-    * length
+    * length of chunk with header, not include 1st two DWORDS
     */
    protected final int length;
    /**

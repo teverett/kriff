@@ -11,7 +11,7 @@ public interface ChunkHeader {
    // byte index of chunk header from the start of the file
    int getHeaderOffset();
 
-   // length of chunk (not including header)
+   // length of chunk (not including id and length sections of header, therefore total chunk size is this plus 8)
    int getLength();
 
    String getId();
