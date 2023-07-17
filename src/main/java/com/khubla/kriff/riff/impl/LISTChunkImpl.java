@@ -3,52 +3,30 @@
  * provided with the distribution. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.khubla.kriff.wav;
+package com.khubla.kriff.riff.impl;
 
-public class WAVFile {
-   private WAVFormat wavFormat;
-   private WAVCues wavCues;
-   private byte[] data;
-   private WAVNoteOrLabel wavNote;
-   private WAVNoteOrLabel wavLabel;
+import com.google.common.io.LittleEndianDataInputStream;
+import com.khubla.kriff.riff.ChunkReader;
+import com.khubla.kriff.riff.api.Chunk;
+import com.khubla.kriff.riff.api.ChunkCallback;
+import com.khubla.kriff.riff.api.ChunkHeader;
 
-   public WAVNoteOrLabel getWavNote() {
-      return wavNote;
+import java.util.ArrayList;
+
+public class LISTChunkImpl extends AbstractChunkImpl {
+   public LISTChunkImpl(ChunkHeader chunkHeader) {
+      super(chunkHeader);
    }
 
-   public void setWavNote(WAVNoteOrLabel wavNote) {
-      this.wavNote = wavNote;
-   }
-
-   public WAVNoteOrLabel getWavLabel() {
-      return wavLabel;
-   }
-
-   public void setWavLabel(WAVNoteOrLabel wavLabel) {
-      this.wavLabel = wavLabel;
-   }
-
-   public byte[] getData() {
-      return data;
-   }
-
-   public void setData(byte[] data) {
-      this.data = data;
-   }
-
-   public WAVFormat getWavFormat() {
-      return wavFormat;
-   }
-
-   public void setWavFormat(WAVFormat wavFormat) {
-      this.wavFormat = wavFormat;
-   }
-
-   public WAVCues getWavCues() {
-      return wavCues;
-   }
-
-   public void setWavCues(WAVCues wavCues) {
-      this.wavCues = wavCues;
+   @Override
+   public void readBody(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
+      this.chunks = new ArrayList<Chunk>();
+      int count = this.chunkHeader.getHeaderOffset() + this.chunkHeader.getHeaderSize();
+      while (count < this.getChunkHeader().getLength()) {
+         ChunkReader subChunkReader = new ChunkReader(count);
+         Chunk subChunk = subChunkReader.read(dis, chunkCallback);
+         this.chunks.add(subChunk);
+         count = subChunkReader.getCount();
+      }
    }
 }

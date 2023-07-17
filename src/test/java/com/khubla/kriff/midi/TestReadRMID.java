@@ -5,6 +5,9 @@
  */
 package com.khubla.kriff.midi;
 
+import com.khubla.kriff.riff.RIFFFileReader;
+import com.khubla.kriff.riff.api.Chunk;
+import com.khubla.kriff.riff.callback.ReportingChunkCallback;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -17,10 +20,10 @@ public class TestReadRMID {
    public void test1() {
       try {
          InputStream is = TestReadRMID.class.getResourceAsStream("/sample.rmi");
-         MIDIFileReader midiFileReader = new MIDIFileReader();
-         MIDIFile midiFile = midiFileReader.read(is);
-         assertNotNull(midiFile);
-         //     assertNotNull(midiFile.getData());
+         ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
+         RIFFFileReader riffFileReader = new RIFFFileReader();
+         Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         assertNotNull(rootChunk);
       } catch (final Exception e) {
          e.printStackTrace();
          fail();

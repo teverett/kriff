@@ -5,6 +5,8 @@
  */
 package com.khubla.kriff.riff.api;
 
+import com.google.common.io.LittleEndianDataInputStream;
+
 import java.util.List;
 
 public interface Chunk {
@@ -12,5 +14,5 @@ public interface Chunk {
 
    List<Chunk> getChunks();
 
-   byte[] getData();
+   void readBody(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception;
 }

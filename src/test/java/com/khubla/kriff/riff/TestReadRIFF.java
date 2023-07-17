@@ -7,6 +7,7 @@ package com.khubla.kriff.riff;
 
 import com.khubla.kriff.riff.api.Chunk;
 import com.khubla.kriff.riff.api.ChunkHeader;
+import com.khubla.kriff.riff.callback.ReportingChunkCallback;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -20,12 +21,9 @@ public class TestReadRIFF {
          InputStream is = TestReadRIFF.class.getResourceAsStream("/PinkPanther30.wav");
          ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
          RIFFFileReader riffFileReader = new RIFFFileReader();
-         RIFFFile riffFile = riffFileReader.read(is, reportingChunkCallback);
-         assertNotNull(riffFile);
-         assertNotNull(riffFile.getRootChunk());
+         Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         assertNotNull(rootChunk);
          // root
-         Chunk rootChunk = riffFile.getRootChunk();
-         assertNull(rootChunk.getData());
          ChunkHeader chunkHeader = rootChunk.getChunkHeader();
          assertNotNull(chunkHeader);
          assertEquals(0, chunkHeader.getId().compareTo("RIFF"));
@@ -37,9 +35,7 @@ public class TestReadRIFF {
          assertEquals(2, rootChunk.getChunks().size());
          // 1
          Chunk chunk1 = rootChunk.getChunks().get(0);
-         assertNotNull(chunk1.getData());
          assertNull(chunk1.getChunks());
-         assertEquals(16, chunk1.getData().length);
          ChunkHeader chunkHeader1 = chunk1.getChunkHeader();
          assertNotNull(chunkHeader1);
          assertEquals(0, chunkHeader1.getId().compareTo("fmt"));
@@ -48,9 +44,7 @@ public class TestReadRIFF {
          assertEquals(20, chunkHeader1.getDataOffset());
          // 2
          Chunk chunk2 = rootChunk.getChunks().get(1);
-         assertNotNull(chunk2.getData());
          assertNull(chunk2.getChunks());
-         assertEquals(1323000, chunk2.getData().length);
          ChunkHeader chunkHeader2 = chunk2.getChunkHeader();
          assertNotNull(chunkHeader2);
          assertEquals(0, chunkHeader2.getId().compareTo("data"));

@@ -3,7 +3,7 @@
  * provided with the distribution. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.khubla.kriff.riff.domain;
+package com.khubla.kriff.riff.impl;
 
 import com.khubla.kriff.riff.api.ChunkHeader;
 
@@ -28,20 +28,26 @@ public class ChunkHeaderImpl implements ChunkHeader {
     * type (only for RIFF and LIST)
     */
    protected final String type;
+   /**
+    * size of header
+    */
+   protected final int headerSize;
 
-   public ChunkHeaderImpl(String id, int length, int headerOffset, int dataOffset, String type) {
+   public ChunkHeaderImpl(String id, int length, int headerOffset, int dataOffset, int headerSize, String type) {
       this.id = id;
       this.length = length;
       this.headerOffset = headerOffset;
       this.dataOffset = dataOffset;
       this.type = type;
+      this.headerSize = headerSize;
    }
 
-   public ChunkHeaderImpl(String id, int length, int headerOffset, int dataOffset) {
+   public ChunkHeaderImpl(String id, int length, int headerOffset, int dataOffset, int headerSize) {
       this.id = id;
       this.length = length;
       this.headerOffset = headerOffset;
       this.dataOffset = dataOffset;
+      this.headerSize = headerSize;
       this.type = null;
    }
 
@@ -56,9 +62,9 @@ public class ChunkHeaderImpl implements ChunkHeader {
    @Override
    public String describe() {
       if (null == type) {
-         return "Chunk '" + id + "' of length " + length + " header offset " + this.headerOffset + " data offset " + this.dataOffset;
+         return "Chunk '" + id + "' of length " + length + " header offset " + this.headerOffset + " header size " + this.headerSize + " data offset " + this.dataOffset;
       } else {
-         return "Chunk '" + id + "' of length " + length + " header offset " + this.headerOffset + " data offset " + this.dataOffset + " of type '" + this.type + "'";
+         return "Chunk '" + id + "' of length " + length + " header offset " + this.headerOffset + " header size " + this.headerSize + " data offset " + this.dataOffset + " of type '" + this.type + "'";
       }
    }
 
@@ -72,5 +78,9 @@ public class ChunkHeaderImpl implements ChunkHeader {
 
    public int getDataOffset() {
       return dataOffset;
+   }
+
+   public int getHeaderSize() {
+      return headerSize;
    }
 }

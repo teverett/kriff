@@ -3,24 +3,13 @@
  * provided with the distribution. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.khubla.kriff.riff.api;
+package com.khubla.kriff.riff.impl.midi;
 
-public interface ChunkHeader {
-   String describe();
+import com.khubla.kriff.riff.api.ChunkHeader;
+import com.khubla.kriff.riff.impl.NULLChunkImpl;
 
-   // byte index of chunk header from the start of the file
-   int getHeaderOffset();
-
-   // length of chunk (not including header)
-   int getLength();
-
-   String getId();
-
-   int getHeaderSize();
-
-   // byte index of data from the start of the file
-   int getDataOffset();
-
-   // only for RIFF and LIST
-   String getType();
+public class DISPChunkImpl extends NULLChunkImpl {
+   public DISPChunkImpl(ChunkHeader chunkHeader) {
+      super(chunkHeader);
+   }
 }

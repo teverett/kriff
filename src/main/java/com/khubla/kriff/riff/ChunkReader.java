@@ -3,51 +3,39 @@
  * provided with the distribution. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.khubla.kriff.riff.domain;
+package com.khubla.kriff.riff;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.riff.RIFFUtil;
 import com.khubla.kriff.riff.api.Chunk;
 import com.khubla.kriff.riff.api.ChunkCallback;
 import com.khubla.kriff.riff.api.ChunkHeader;
+import com.khubla.kriff.riff.impl.AbstractChunkImpl;
+import com.khubla.kriff.riff.impl.ChunkHeaderImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ChunkImpl implements Chunk {
+public class ChunkReader {
    /**
     * logger
     */
-   private static final Logger logger = LogManager.getLogger(ChunkImpl.class);
-   /**
-    * subchunks (RIFF and LIST)
-    */
-   private List<Chunk> chunks;
+   private static final Logger logger = LogManager.getLogger(ChunkFactory.class);
    /**
     * running byte count
     */
    private int count;
-   /**
-    * header
-    */
-   private ChunkHeader chunkHeader;
-   /**
-    * data
-    */
-   private byte[] data = null;
 
-   public ChunkImpl() {
-      this.count = 0;
-   }
-
-   public ChunkImpl(int count) {
+   public ChunkReader(int count) {
       this.count = count;
    }
 
-   protected void readHeader(LittleEndianDataInputStream dis) throws IOException {
+   public int getCount() {
+      return count;
+   }
+
+   protected ChunkHeader readHeader(LittleEndianDataInputStream dis) throws IOException {
+      ChunkHeader ret = null;
       /*
        * id
        */
@@ -61,57 +49,40 @@ public class ChunkImpl implements Chunk {
        * is riff or list?
        */
       if (isCompound(id)) {
-         this.chunks = new ArrayList<Chunk>();
          String type = RIFFUtil.readString(dis, 4);
-         this.chunkHeader = new ChunkHeaderImpl(id, length, count, count + 12, type);
+         ret = new ChunkHeaderImpl(id, length, count, count + 12, 12, type);
          this.count += 12;
       } else {
-         this.chunkHeader = new ChunkHeaderImpl(id, length, count, count + 8);
+         ret = new ChunkHeaderImpl(id, length, count, count + 8, 8);
          this.count += 8;
       }
-   }
-
-   public ChunkHeader getChunkHeader() {
-      return chunkHeader;
-   }
-
-   public List<Chunk> getChunks() {
-      return this.chunks;
-   }
-
-   public byte[] getData() {
-      return data;
-   }
-
-   public void read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
-      // header
-      this.readHeader(dis);
-      logger.info(this.chunkHeader.describe());
-      if (null != chunkCallback) {
-         chunkCallback.chunkStart(this.chunkHeader);
-      }
-      // contents
-      if (isCompound(this.chunkHeader.getId())) {
-         while (count < this.chunkHeader.getLength()) {
-            // get chunk
-            ChunkImpl RIFFChunk = new ChunkImpl(this.count);
-            RIFFChunk.read(dis, chunkCallback);
-            this.chunks.add(RIFFChunk);
-            this.count = RIFFChunk.count;
-         }
-      } else {
-         // read content
-         this.data = new byte[this.chunkHeader.getLength()];
-         dis.read(this.data);
-         count += this.chunkHeader.getLength();
-      }
-      // callback
-      if (null != chunkCallback) {
-         chunkCallback.chunkEnd(this);
-      }
+      return ret;
    }
 
    private boolean isCompound(String id) {
       return ((id.compareTo("RIFF") == 0) || (id.compareTo("LIST") == 0) || (id.compareTo("INFO") == 0));
+   }
+
+   public Chunk read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
+      try {
+         // header
+         ChunkHeader chunkHeader = this.readHeader(dis);
+         logger.info(chunkHeader.describe());
+         if (null != chunkCallback) {
+            chunkCallback.chunkStart(chunkHeader);
+         }
+         // chunk
+         AbstractChunkImpl chunk = ChunkFactory.getChunk(chunkHeader);
+         // read content
+         chunk.readBody(dis, chunkCallback);
+         count += chunkHeader.getLength();
+         // callback
+         if (null != chunkCallback) {
+            chunkCallback.chunkEnd(chunk);
+         }
+         return chunk;
+      } catch (Exception e) {
+         throw new Exception("Exception in read", e);
+      }
    }
 }

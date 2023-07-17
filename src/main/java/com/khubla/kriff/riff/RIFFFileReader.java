@@ -6,6 +6,7 @@
 package com.khubla.kriff.riff;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.khubla.kriff.riff.api.Chunk;
 import com.khubla.kriff.riff.api.ChunkCallback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,8 +21,8 @@ public class RIFFFileReader {
     */
    private static final Logger logger = LogManager.getLogger(RIFFFileReader.class);
 
-   public RIFFFile read(InputStream inputStream, ChunkCallback chunkCallback) throws Exception {
-      RIFFFile ret = new RIFFFile();
+   public Chunk read(InputStream inputStream, ChunkCallback chunkCallback) throws Exception {
+      Chunk ret = null;
       BufferedInputStream bis = null;
       LittleEndianDataInputStream dis = null;
       try {
@@ -31,7 +32,8 @@ public class RIFFFileReader {
              */
             bis = new BufferedInputStream(inputStream);
             dis = new LittleEndianDataInputStream(bis);
-            ret.read(dis, chunkCallback);
+            ChunkReader chunkReader = new ChunkReader(0);
+            ret = chunkReader.read(dis, chunkCallback);
          }
          return ret;
       } catch (final Exception e) {
@@ -51,7 +53,7 @@ public class RIFFFileReader {
       }
    }
 
-   public RIFFFile read(String fn, ChunkCallback chunkCallback) throws Exception {
+   public Chunk read(String fn, ChunkCallback chunkCallback) throws Exception {
       InputStream fis = null;
       try {
          fis = new FileInputStream(fn);

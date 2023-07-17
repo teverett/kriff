@@ -3,59 +3,30 @@
  * provided with the distribution. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.khubla.kriff.midi;
+package com.khubla.kriff.riff.impl;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.riff.RIFFFileReader;
+import com.khubla.kriff.riff.ChunkReader;
 import com.khubla.kriff.riff.api.Chunk;
 import com.khubla.kriff.riff.api.ChunkCallback;
 import com.khubla.kriff.riff.api.ChunkHeader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
 
-public class MIDIFileReader implements ChunkCallback {
-   /**
-    * logger
-    */
-   private static final Logger logger = LogManager.getLogger(MIDIFileReader.class);
-   /**
-    * RIFF reader
-    */
-   private final RIFFFileReader riffFileReader = new RIFFFileReader();
-   /**
-    * result
-    */
-   private final MIDIFile midiFile = new MIDIFile();
-
-   public MIDIFile read(InputStream inputStream) throws Exception {
-      riffFileReader.read(inputStream, this);
-      return midiFile;
-   }
-
-   public MIDIFile read(String fn) throws Exception {
-      riffFileReader.read(fn, this);
-      return midiFile;
+public class LISChunkImpl extends AbstractChunkImpl {
+   public LISChunkImpl(ChunkHeader chunkHeader) {
+      super(chunkHeader);
    }
 
    @Override
-   public void chunkStart(ChunkHeader chunkHeader) throws IOException {
-      // nada
-   }
-
-   @Override
-   public void chunkEnd(Chunk chunk) throws IOException {
-      if (chunk.getChunkHeader().getId().compareTo("data") == 0) {
-         readRMID(chunk);
+   public void readBody(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
+      this.chunks = new ArrayList<Chunk>();
+      int count = this.chunkHeader.getHeaderOffset() + this.chunkHeader.getHeaderSize();
+      while (count < this.getChunkHeader().getLength()) {
+         ChunkReader subChunkReader = new ChunkReader(count);
+         Chunk subChunk = subChunkReader.read(dis, chunkCallback);
+         this.chunks.add(subChunk);
+         count = subChunkReader.getCount();
       }
-   }
-
-   private void readRMID(Chunk chunk) throws IOException {
-      //   WAVFormat wavFormat = new WAVFormat();
-      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(chunk.getData());
-      LittleEndianDataInputStream littleEndianDataInputStream = new LittleEndianDataInputStream(byteArrayInputStream);
    }
 }
