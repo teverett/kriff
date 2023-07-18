@@ -129,4 +129,22 @@ public class TestReadWAV {
          fail();
       }
    }
+
+   @Test
+   public void test5() {
+      try {
+         final int filesize = 234278;
+         InputStream is = TestReadWAV.class.getResourceAsStream("/stereofl.wav");
+         RIFFFileReader riffFileReader = new RIFFFileReader();
+         ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
+         Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         int lastByte = rootChunk.getChunkHeader().getLastByteIndex();
+         assertEquals(filesize, lastByte);
+         assertNotNull(rootChunk);
+         assertEquals(3, rootChunk.getChunks().size());
+      } catch (final Exception e) {
+         e.printStackTrace();
+         fail();
+      }
+   }
 }
