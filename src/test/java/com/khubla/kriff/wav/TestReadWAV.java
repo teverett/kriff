@@ -24,10 +24,13 @@ public class TestReadWAV {
    @Test
    public void test1() {
       try {
+         final int filesize = 1323044;
          InputStream is = TestReadWAV.class.getResourceAsStream("/PinkPanther30.wav");
          ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
          RIFFFileReader riffFileReader = new RIFFFileReader();
          Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         int lastByte = rootChunk.getChunkHeader().getLastByteIndex();
+         assertEquals(filesize, lastByte);
          assertNotNull(rootChunk);
          FmtChunkImpl fmtChunk = (FmtChunkImpl) rootChunk.getChunks().get(0);
          assertNotNull(fmtChunk);
@@ -49,10 +52,13 @@ public class TestReadWAV {
    @Test
    public void test2() {
       try {
+         final int filesize = 118200;
          InputStream is = TestReadWAV.class.getResourceAsStream("/stereol.wav");
          RIFFFileReader riffFileReader = new RIFFFileReader();
          ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
          Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         int lastByte = rootChunk.getChunkHeader().getLastByteIndex();
+         assertEquals(filesize, lastByte);
          assertNotNull(rootChunk);
          FmtChunkImpl fmtChunk = (FmtChunkImpl) rootChunk.getChunks().get(0);
          assertNotNull(fmtChunk);
@@ -91,10 +97,13 @@ public class TestReadWAV {
    @Test
    public void test3() {
       try {
+         final int filesize = 2706;
          InputStream is = TestReadWAV.class.getResourceAsStream("/voxware.wav");
          RIFFFileReader riffFileReader = new RIFFFileReader();
          ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
          Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         int lastByte = rootChunk.getChunkHeader().getLastByteIndex();
+         assertEquals(filesize, lastByte);
          assertNotNull(rootChunk);
          assertEquals(3, rootChunk.getChunks().size());
       } catch (final Exception e) {
@@ -106,10 +115,13 @@ public class TestReadWAV {
    @Test
    public void test4() {
       try {
+         final int filesize = 9370;
          InputStream is = TestReadWAV.class.getResourceAsStream("/truspech.wav");
          RIFFFileReader riffFileReader = new RIFFFileReader();
          ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
          Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         int lastByte = rootChunk.getChunkHeader().getLastByteIndex();
+         assertEquals(filesize, lastByte);
          assertNotNull(rootChunk);
          assertEquals(3, rootChunk.getChunks().size());
       } catch (final Exception e) {

@@ -12,17 +12,19 @@ import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestReadRMID {
    @Test
    public void test1() {
       try {
+         final int filesize = 29640;
          InputStream is = TestReadRMID.class.getResourceAsStream("/sample.rmi");
          ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
          RIFFFileReader riffFileReader = new RIFFFileReader();
          Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         int lastByte = rootChunk.getChunkHeader().getLastByteIndex();
+         assertEquals(filesize, lastByte);
          assertNotNull(rootChunk);
       } catch (final Exception e) {
          e.printStackTrace();

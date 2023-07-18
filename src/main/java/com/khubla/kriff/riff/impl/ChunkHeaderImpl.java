@@ -32,6 +32,10 @@ public class ChunkHeaderImpl implements ChunkHeader {
     * size of header
     */
    protected final int headerSize;
+   /**
+    * index, from the start of the file, of the last byte of this chunk
+    */
+   protected int lastByteIndex;
 
    public ChunkHeaderImpl(String id, int length, int headerOffset, int dataOffset, int headerSize, String type) {
       this.id = id;
@@ -70,6 +74,15 @@ public class ChunkHeaderImpl implements ChunkHeader {
 
    public String getType() {
       return type;
+   }
+
+   @Override
+   public int getLastByteIndex() {
+      return lastByteIndex;
+   }
+
+   public void setLastByteIndex(int lastByteIndex) {
+      this.lastByteIndex = lastByteIndex;
    }
 
    public int getHeaderOffset() {

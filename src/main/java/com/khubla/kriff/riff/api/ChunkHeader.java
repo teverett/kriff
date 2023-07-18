@@ -23,4 +23,7 @@ public interface ChunkHeader {
 
    // only for RIFF and LIST
    String getType();
+
+   // byte index of the last byte in this chunk
+   int getLastByteIndex();
 }

@@ -18,10 +18,13 @@ public class TestReadRIFF {
    @Test
    public void test1() {
       try {
+         final int filesize = 1323044;
          InputStream is = TestReadRIFF.class.getResourceAsStream("/PinkPanther30.wav");
          ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
          RIFFFileReader riffFileReader = new RIFFFileReader();
          Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         int lastByte = rootChunk.getChunkHeader().getLastByteIndex();
+         assertEquals(filesize, lastByte);
          assertNotNull(rootChunk);
          // root
          ChunkHeader chunkHeader = rootChunk.getChunkHeader();

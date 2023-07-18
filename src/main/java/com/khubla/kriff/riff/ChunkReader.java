@@ -8,7 +8,6 @@ package com.khubla.kriff.riff;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.khubla.kriff.riff.api.Chunk;
 import com.khubla.kriff.riff.api.ChunkCallback;
-import com.khubla.kriff.riff.api.ChunkHeader;
 import com.khubla.kriff.riff.impl.AbstractChunkImpl;
 import com.khubla.kriff.riff.impl.ChunkHeaderImpl;
 import org.apache.logging.log4j.LogManager;
@@ -34,8 +33,8 @@ public class ChunkReader {
       return count;
    }
 
-   protected ChunkHeader readHeader(LittleEndianDataInputStream dis) throws IOException {
-      ChunkHeader ret = null;
+   protected ChunkHeaderImpl readHeader(LittleEndianDataInputStream dis) throws IOException {
+      ChunkHeaderImpl ret = null;
       /*
        * id
        */
@@ -51,7 +50,7 @@ public class ChunkReader {
       if (isCompound(id)) {
          String type = RIFFUtil.readString(dis, 4);
          ret = new ChunkHeaderImpl(id, length, count, count + 12, 12, type);
-         this.count += 12;
+         this.count += 8;  // dont count the type; thats not in the header
       } else {
          ret = new ChunkHeaderImpl(id, length, count, count + 8, 8);
          this.count += 8;
@@ -66,7 +65,7 @@ public class ChunkReader {
    public Chunk read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
       try {
          // header
-         ChunkHeader chunkHeader = this.readHeader(dis);
+         ChunkHeaderImpl chunkHeader = this.readHeader(dis);
          logger.info(chunkHeader.describe());
          if (null != chunkCallback) {
             chunkCallback.chunkStart(chunkHeader);
@@ -76,6 +75,7 @@ public class ChunkReader {
          // read content
          chunk.readBody(dis, chunkCallback);
          count += chunkHeader.getLength();
+         chunkHeader.setLastByteIndex(count);
          // callback
          if (null != chunkCallback) {
             chunkCallback.chunkEnd(chunk);
