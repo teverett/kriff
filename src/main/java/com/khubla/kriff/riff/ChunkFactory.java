@@ -7,6 +7,7 @@ package com.khubla.kriff.riff;
 
 import com.khubla.kriff.riff.api.ChunkHeader;
 import com.khubla.kriff.riff.impl.*;
+import com.khubla.kriff.riff.impl.pal.PALChunkImpl;
 import com.khubla.kriff.riff.impl.rmid.RMIDChunkImpl;
 import com.khubla.kriff.riff.impl.wav.*;
 import org.apache.logging.log4j.LogManager;
@@ -57,6 +58,10 @@ public class ChunkFactory {
             return new RMIDChunkImpl(chunkHeader);
          case "FILE":
             return new FILEChunkImpl(chunkHeader);
+         case "CSET":
+            return new CSETChunkImpl(chunkHeader);
+         case "PAL":
+            return new PALChunkImpl(chunkHeader);
          default:
             // some chunk we don't know
             return new NULLChunkImpl(chunkHeader);
