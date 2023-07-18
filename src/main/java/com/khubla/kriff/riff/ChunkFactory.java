@@ -7,6 +7,7 @@ package com.khubla.kriff.riff;
 
 import com.khubla.kriff.riff.api.ChunkHeader;
 import com.khubla.kriff.riff.impl.*;
+import com.khubla.kriff.riff.impl.rmid.RMIDChunkImpl;
 import com.khubla.kriff.riff.impl.wav.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,9 +48,16 @@ public class ChunkFactory {
             return new PADChunkImpl(chunkHeader);
          case "LTXT":
             return new LTXTChunkImpl(chunkHeader);
+         case "fact":
+         case "FACT":
+            return new FACTChunkImpl(chunkHeader);
+         case "PLST":
+            return new PLSTChunkImpl(chunkHeader);
+         case "RMID":
+            return new RMIDChunkImpl(chunkHeader);
          default:
-            logger.info("Unknown chunk type '" + chunkHeader.getId() + "'");
-            throw new Exception("Unknown chunk type '" + chunkHeader.getId() + "'");
+            // some chunk we don't know
+            return new NULLChunkImpl(chunkHeader);
       }
    }
 }

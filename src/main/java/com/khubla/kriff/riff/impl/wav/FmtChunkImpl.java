@@ -29,13 +29,18 @@ public class FmtChunkImpl extends AbstractChunkImpl {
 
    @Override
    public void readBody(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws IOException {
-      this.wFormatTag = FmtChunkImpl.Format.from(dis.readShort());
-      this.wChannels = dis.readShort();
-      this.dwSamplesPerSec = dis.readInt();
-      this.dwAvgBytesPerSec = dis.readInt();
-      this.wBlockAlign = dis.readShort();
+      this.wFormatTag = FmtChunkImpl.Format.from(dis.readShort()); // 2
+      this.wChannels = dis.readShort(); // 2
+      this.dwSamplesPerSec = dis.readInt(); // 4
+      this.dwAvgBytesPerSec = dis.readInt(); // 4
+      this.wBlockAlign = dis.readShort(); //2
+      int total = 14;
       if (this.wFormatTag == FmtChunkImpl.Format.PCM) {
-         this.wBitsPerSample = dis.readShort();
+         this.wBitsPerSample = dis.readShort(); //2
+         total += 2;
+      }
+      if (total < this.chunkHeader.getLength()) {
+         dis.skipBytes(this.chunkHeader.getLength() - total);
       }
    }
 

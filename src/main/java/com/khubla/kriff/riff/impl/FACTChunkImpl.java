@@ -6,29 +6,18 @@
 package com.khubla.kriff.riff.impl;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.khubla.kriff.riff.RIFFUtil;
 import com.khubla.kriff.riff.api.ChunkCallback;
 import com.khubla.kriff.riff.api.ChunkHeader;
 
-import java.util.ArrayList;
-import java.util.List;
+public class FACTChunkImpl extends AbstractChunkImpl {
+   public int dwSampleLength;
 
-public class INFChunkImpl extends AbstractChunkImpl {
-   public List<Info> infos = new ArrayList<Info>();
-
-   public INFChunkImpl(ChunkHeader chunkHeader) {
+   public FACTChunkImpl(ChunkHeader chunkHeader) {
       super(chunkHeader);
    }
 
    @Override
    public void readBody(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
-      String id = RIFFUtil.readString(dis, 4);
-      int size = dis.readInt();
-      String test = RIFFUtil.readString(dis, size);
-   }
-
-   public static class Info {
-      public String id;
-      public String text;
+      this.dwSampleLength = dis.readInt();
    }
 }

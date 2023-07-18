@@ -60,7 +60,7 @@ public class ChunkReader {
    }
 
    private boolean isCompound(String id) {
-      return ((id.compareTo("RIFF") == 0) || (id.compareTo("LIST") == 0));
+      return ((id.compareTo("RIFF") == 0) || (id.compareTo("LIST") == 0) || (id.compareTo("LIS") == 0));
    }
 
    public Chunk read(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {

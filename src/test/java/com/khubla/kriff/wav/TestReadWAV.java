@@ -87,4 +87,34 @@ public class TestReadWAV {
          fail();
       }
    }
+
+   @Test
+   public void test3() {
+      try {
+         InputStream is = TestReadWAV.class.getResourceAsStream("/voxware.wav");
+         RIFFFileReader riffFileReader = new RIFFFileReader();
+         ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
+         Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         assertNotNull(rootChunk);
+         assertEquals(3, rootChunk.getChunks().size());
+      } catch (final Exception e) {
+         e.printStackTrace();
+         fail();
+      }
+   }
+
+   @Test
+   public void test4() {
+      try {
+         InputStream is = TestReadWAV.class.getResourceAsStream("/truspech.wav");
+         RIFFFileReader riffFileReader = new RIFFFileReader();
+         ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
+         Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         assertNotNull(rootChunk);
+         assertEquals(3, rootChunk.getChunks().size());
+      } catch (final Exception e) {
+         e.printStackTrace();
+         fail();
+      }
+   }
 }
