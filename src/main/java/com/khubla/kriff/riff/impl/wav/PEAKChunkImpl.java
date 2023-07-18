@@ -5,11 +5,38 @@
  */
 package com.khubla.kriff.riff.impl.wav;
 
+import com.google.common.io.LittleEndianDataInputStream;
+import com.khubla.kriff.riff.api.ChunkCallback;
 import com.khubla.kriff.riff.api.ChunkHeader;
-import com.khubla.kriff.riff.impl.NULLChunkImpl;
+import com.khubla.kriff.riff.impl.AbstractChunkImpl;
 
-public class PEAKChunkImpl extends NULLChunkImpl {
+import java.util.ArrayList;
+import java.util.List;
+
+public class PEAKChunkImpl extends AbstractChunkImpl {
+   public int version;
+   public int timestamp;  // unix timestamp
+   public List<PPEAK> peaks = new ArrayList<PPEAK>();
+
    public PEAKChunkImpl(ChunkHeader chunkHeader) {
       super(chunkHeader);
+   }
+
+   @Override
+   public void readBody(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
+      this.version = dis.readInt();
+      this.timestamp = dis.readInt();
+      int c = (this.chunkHeader.getLength() - 8) / 8;
+      for (int i = 0; i < c; i++) {
+         PPEAK ppeak = new PPEAK();
+         ppeak.peak = dis.readInt();
+         ppeak.position = dis.readInt();
+         peaks.add(ppeak);
+      }
+   }
+
+   public static class PPEAK {
+      int peak;
+      int position;
    }
 }

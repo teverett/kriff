@@ -71,6 +71,8 @@ public class TestReadWAV {
          // peak
          PEAKChunkImpl peakChunk = (PEAKChunkImpl) rootChunk.getChunks().get(1);
          assertNotNull(peakChunk);
+         assertEquals(1, peakChunk.version);
+         assertEquals(2, peakChunk.peaks.size());
          // cue
          CuesChunkImpl cuesChunk = (CuesChunkImpl) rootChunk.getChunks().get(2);
          assertNotNull(cuesChunk);
@@ -141,7 +143,7 @@ public class TestReadWAV {
          int lastByte = rootChunk.getChunkHeader().getLastByteIndex();
          assertEquals(filesize, lastByte);
          assertNotNull(rootChunk);
-         assertEquals(3, rootChunk.getChunks().size());
+         assertEquals(6, rootChunk.getChunks().size());
       } catch (final Exception e) {
          e.printStackTrace();
          fail();
