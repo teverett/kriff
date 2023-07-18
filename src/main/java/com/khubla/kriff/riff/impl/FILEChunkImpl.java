@@ -9,28 +9,20 @@ import com.google.common.io.LittleEndianDataInputStream;
 import com.khubla.kriff.riff.api.ChunkCallback;
 import com.khubla.kriff.riff.api.ChunkHeader;
 
-public class LTXTChunkImpl extends AbstractChunkImpl {
+public class FILEChunkImpl extends AbstractChunkImpl {
    public int dwName;
-   public int dwSampleLength;
-   public int dwPurpose;
-   public short wCountry;
-   public short wLanguage;
-   public short wDialect;
-   public short wCodePage;
+   public int dwMedType;
+   byte[] fileData;
 
-   public LTXTChunkImpl(ChunkHeader chunkHeader) {
+   public FILEChunkImpl(ChunkHeader chunkHeader) {
       super(chunkHeader);
    }
 
    @Override
    public void readBody(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
-      dwName = dis.readInt(); // 4
-      dwSampleLength = dis.readInt();// 4
-      dwPurpose = dis.readInt();// 4
-      wCountry = dis.readShort();//2
-      wLanguage = dis.readShort();//2
-      wDialect = dis.readShort();//2
-      wCodePage = dis.readShort();//2
-      // total bytes read should be 20
+      this.dwName = dis.readInt();
+      this.dwMedType = dis.readInt();
+      fileData = new byte[this.chunkHeader.getLength() - 8];
+      dis.read(fileData);
    }
 }

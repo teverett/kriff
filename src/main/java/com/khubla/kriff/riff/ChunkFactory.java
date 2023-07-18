@@ -55,6 +55,8 @@ public class ChunkFactory {
             return new PLSTChunkImpl(chunkHeader);
          case "RMID":
             return new RMIDChunkImpl(chunkHeader);
+         case "FILE":
+            return new FILEChunkImpl(chunkHeader);
          default:
             // some chunk we don't know
             return new NULLChunkImpl(chunkHeader);

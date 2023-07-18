@@ -149,4 +149,22 @@ public class TestReadWAV {
          fail();
       }
    }
+
+   @Test
+   public void test6() {
+      try {
+         final int filesize = 47252;
+         InputStream is = TestReadWAV.class.getResourceAsStream("/M1F1-mulawWE-AFsp.wav");
+         RIFFFileReader riffFileReader = new RIFFFileReader();
+         ReportingChunkCallback reportingChunkCallback = new ReportingChunkCallback();
+         Chunk rootChunk = riffFileReader.read(is, reportingChunkCallback);
+         int lastByte = rootChunk.getChunkHeader().getLastByteIndex();
+         assertEquals(filesize, lastByte);
+         assertNotNull(rootChunk);
+         assertEquals(5, rootChunk.getChunks().size());
+      } catch (final Exception e) {
+         e.printStackTrace();
+         fail();
+      }
+   }
 }
