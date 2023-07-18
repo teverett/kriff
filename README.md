@@ -11,7 +11,7 @@ Maven coordinates:
 ```
 <groupId>com.khubla.kriff</groupId>
 <artifactId>kriff</artifactId>
-<version>1.0</version>
+<version>1.1</version>
 ```
 
 Use the type [RIFFFile](https://github.com/teverett/kriff/blob/main/src/main/java/com/khubla/kriff/domain/RIFFFile.java) to read the RIFF file from an `InputStream`.
