@@ -5,10 +5,36 @@
  */
 package com.khubla.kriff.riff.impl;
 
+import com.google.common.io.LittleEndianDataInputStream;
+import com.khubla.kriff.riff.api.ChunkCallback;
 import com.khubla.kriff.riff.api.ChunkHeader;
 
-public class PLSTChunkImpl extends NULLChunkImpl {
+import java.util.ArrayList;
+import java.util.List;
+
+public class PLSTChunkImpl extends AbstractChunkImpl {
+   public int dwSegments;
+   public List<PLSTEntry> entries = new ArrayList<PLSTEntry>();
+
    public PLSTChunkImpl(ChunkHeader chunkHeader) {
       super(chunkHeader);
+   }
+
+   @Override
+   public void readBody(LittleEndianDataInputStream dis, ChunkCallback chunkCallback) throws Exception {
+      this.dwSegments = dis.read();
+      for (int i = 0; i < dwSegments; i++) {
+         PLSTEntry plstEntry = new PLSTEntry();
+         plstEntry.dwName = dis.readInt();
+         plstEntry.dwLength = dis.readInt();
+         plstEntry.dwLoops = dis.readInt();
+         this.entries.add(plstEntry);
+      }
+   }
+
+   public static class PLSTEntry {
+      public int dwName;
+      public int dwLength;
+      public int dwLoops;
    }
 }
